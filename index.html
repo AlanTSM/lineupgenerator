@@ -1,0 +1,2899 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generador de alineaciones TSM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-light: #3b82f6;
+            --secondary: #10b981;
+            --secondary-dark: #047857;
+            --accent: #f59e0b;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+            --white: #ffffff;
+            --gray: #6b7280;
+            --error: #ef4444;
+            --success: #22c55e;
+            --elegant: #6b21a8;
+            --elegant-light: #a855f7;
+        }
+        
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: #f8fafc;
+        color: var(--dark);
+        min-height: 100vh;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+        background-color: #1a202c;
+        color: #e2e8f0;
+    }
+
+    .page-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+
+    header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        color: var(--white);
+        padding: 1.5rem 0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dark-mode header {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .header-description {
+        font-size: 0.875rem;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.9);
+        margin-top: 0.5rem;
+        text-align: left;
+        position: relative;
+        z-index: 2;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .logo i {
+        color: var(--accent);
+    }
+
+    .field-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 20px 20px;
+        opacity: 0.2;
+        z-index: 1;
+    }
+
+    .card {
+        background-color: var(--white);
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .dark-mode .card {
+        background-color: #2d3748;
+        color: #e2e8f0;
+        border-color: #4a5568;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        color: var(--white);
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dark-mode .card-header {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    }
+
+    .card-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+        opacity: 0.6;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .input-group {
+        margin-bottom: 1rem;
+    }
+
+    .input-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 0.875rem;
+    }
+
+    .dark-mode .input-label {
+        color: #e2e8f0;
+    }
+
+    .input-field {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+        background-color: var(--white);
+    }
+
+    .dark-mode .input-field {
+        background-color: #4a5568;
+        color: #e2e8f0;
+        border-color: #718096;
+    }
+
+    .input-field:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .dark-mode .input-field:focus {
+        border-color: #63b3ed;
+        box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.2);
+    }
+
+    .input-field.error {
+        border-color: var(--error);
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+    }
+
+    .select-field {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+
+    .dark-mode .select-field {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a0aec0' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--dark);
+        cursor: pointer;
+        margin-bottom: 0.5rem;
+    }
+
+    .dark-mode .checkbox-label {
+        color: #e2e8f0;
+    }
+
+    .checkbox-field {
+        margin-right: 0.5rem;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 0.25rem;
+        border: 1px solid #d1d5db;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .checkbox-field:checked {
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.625rem 1.25rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        color: var(--white);
+        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3), 0 2px 4px -1px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, var(--primary) 10%, var(--primary-light) 90%);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4), 0 4px 6px -2px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3), 0 2px 4px -1px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn-secondary {
+        background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+        color: var(--white);
+        box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3), 0 2px 4px -1px rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-secondary:hover {
+        background: linear-gradient(135deg, var(--secondary) 10%, var(--secondary-dark) 90%);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.4), 0 4px 6px -2px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-secondary:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3), 0 2px 4px -1px rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-accent {
+        background-color: var(--accent);
+        color: var(--white);
+    }
+
+    .btn-accent:hover {
+        background-color: #e59000;
+    }
+
+    .btn-elegant {
+        background: linear-gradient(135deg, var(--elegant) 0%, var(--elegant-light) 100%);
+        color: var(--white);
+        box-shadow: 0 4px 6px -1px rgba(107, 33, 168, 0.3), 0 2px 4px -1px rgba(107, 33, 168, 0.2);
+    }
+
+    .btn-elegant:hover {
+        background: linear-gradient(135deg, var(--elegant) 10%, var(--elegant-light) 90%);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(107, 33, 168, 0.4), 0 4px 6px -2px rgba(107, 33, 168, 0.3);
+    }
+
+    .btn-elegant:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 6px -1px rgba(107, 33, 168, 0.3), 0 2px 4px -1px rgba(107, 33, 168, 0.2);
+    }
+
+    .btn-sm {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.75rem;
+    }
+
+    .btn-lg {
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+        width: 100%;
+    }
+
+    .btn-outline {
+        background: transparent;
+        border: 1px solid var(--primary-light);
+        color: var(--primary);
+    }
+
+    .btn-outline:hover {
+        background-color: var(--primary-light);
+        color: var(--white);
+    }
+
+    .btn-danger {
+        background-color: var(--error);
+        color: var(--white);
+    }
+
+    .btn-danger:hover {
+        background-color: #dc2626;
+    }
+
+    .btn-icon {
+        padding: 0.5rem;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .btn-icon:hover {
+        transform: scale(1.1);
+    }
+
+    .btn-icon:active {
+        transform: scale(0.95);
+    }
+
+    .btn-icon img {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: var(--dark);
+        color: var(--white);
+        text-align: center;
+        border-radius: 0.375rem;
+        padding: 0.25rem 0.5rem;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -60px;
+        font-size: 0.75rem;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .action-animation {
+        animation: actionFeedback 0.4s ease-in-out;
+    }
+
+    @keyframes actionFeedback {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.2); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .textarea-field {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+        min-height: 300px;
+        font-family: 'Courier New', monospace;
+        resize: vertical;
+    }
+
+    .dark-mode .textarea-field {
+        background-color: #4a5568;
+        color: #e2e8f0;
+        border-color: #718096;
+    }
+
+    .textarea-field:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .dark-mode .textarea-field:focus {
+        border-color: #63b3ed;
+        box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.2);
+    }
+
+    .range-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.5rem 0;
+    }
+
+    .range-field {
+        flex: 1;
+        height: 0.5rem;
+        -webkit-appearance: none;
+        appearance: none;
+        border-radius: 0.25rem;
+        background: #e5e7eb;
+        outline: none;
+    }
+
+    .dark-mode .range-field {
+        background: #4a5568;
+    }
+
+    .range-field::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+        border: 2px solid var(--white);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .range-field::-moz-range-thumb {
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+        border: 2px solid var(--white);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .range-value {
+        font-weight: 600;
+        color: var(--primary);
+        min-width: 2rem;
+        text-align: center;
+    }
+
+    .lineup-card {
+        padding: 1.5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border-radius: 0.75rem;
+        background-color: var(--white);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .dark-mode .lineup-card {
+        background-color: #2d3748;
+        color: #e2e8f0;
+    }
+
+    .lineup-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .lineup-title {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        color: var(--white);
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .dark-mode .lineup-title {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    }
+
+    .lineup-title::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+        opacity: 0.6;
+    }
+
+    .lineup-content {
+        flex: 1;
+        font-family: 'Courier New', monospace;
+        font-size: 0.875rem;
+        white-space: pre-wrap;
+        line-height: 1.5;
+        overflow-x: auto;
+        margin-bottom: 0.5rem;
+    }
+
+    .modification-card {
+        margin-top: 1rem;
+        padding: 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        background-color: #f8fafc;
+        display: none;
+    }
+
+    .dark-mode .modification-card {
+        background-color: #4a5568;
+        border-color: #718096;
+    }
+
+    .modification-title {
+        font-weight: 600;
+        font-size: 0.875rem;
+        margin-bottom: 0.75rem;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .dark-mode .modification-title {
+        color: #e2e8f0;
+    }
+
+    .modification-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .abbr-field {
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 1px;
+        background-color: #ebf5ff;
+        border-color: #93c5fd;
+        color: var(--primary);
+    }
+
+    .dark-mode .abbr-field {
+        background-color: #2d3748;
+        border-color: #4a5568;
+        color: #63b3ed;
+    }
+
+    .success-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.375rem;
+        background-color: #d1fae5;
+        color: #065f46;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .dark-mode .success-badge {
+        background-color: #2d5c42;
+        color: #9ae6b4;
+    }
+
+    .success-badge.visible {
+        opacity: 1;
+    }
+
+    .file-input-hidden {
+        display: none;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .required-asterisk {
+        color: var(--error);
+        margin-left: 0.25rem;
+        cursor: help;
+    }
+
+    /* Estilos para el botón de pantalla completa en iframe */
+    #fullscreen-btn {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+        background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        line-height: 1.2;
+    }
+
+    #fullscreen-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Estilos para el spinner de carga */
+    .spinner {
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 3px solid var(--primary);
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .loading {
+        display: inline-flex;
+        align-items: center;
+        font-size: 14px;
+        color: var(--primary);
+    }
+
+    .dark-mode .loading {
+        color: #63b3ed;
+    }
+
+    /* Estilos para el modal de plantilla */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 1200px; /* Más ancho */
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .dark-mode .modal-content {
+        background-color: #2d3748;
+        color: #e2e8f0;
+    }
+
+    /* Estilos para scrollbars modernas */
+    .modal-content::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .modal-content::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .dark-mode .modal-content::-webkit-scrollbar-track {
+        background: #4a5568;
+    }
+
+    .modal-content::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        border-radius: 10px;
+    }
+
+    .dark-mode .modal-content::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+    }
+
+    .modal-content::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+    }
+
+    .dark-mode .modal-content::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+    }
+
+    .modal-header {
+        padding: 20px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .dark-mode .modal-header {
+        border-bottom: 1px solid #4a5568;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .team-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .dark-mode .team-info {
+        border-bottom: 1px solid #4a5568;
+    }
+
+    .team-badge {
+        width: auto;
+        height: 64px;
+        margin-right: 20px;
+        object-fit: contain;
+    }
+
+    .team-name {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .squad-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 12px;
+    }
+
+    .squad-table th, .squad-table td {
+        padding: 6px 8px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .dark-mode .squad-table th, .dark-mode .squad-table td {
+        border-bottom: 1px solid #4a5568;
+    }
+
+    .squad-table th {
+        background-color: #f3f4f6;
+        font-weight: 600;
+        cursor: pointer;
+        user-select: none;
+        position: relative;
+        padding-right: 20px;
+    }
+
+    .squad-table th:hover {
+        background-color: #e5e7eb;
+    }
+
+    .dark-mode .squad-table th {
+        background-color: #4a5568;
+    }
+
+    .dark-mode .squad-table th:hover {
+        background-color: #5a6578;
+    }
+
+    .squad-table th.sort-asc::after {
+        content: ' ↑';
+        position: absolute;
+        right: 8px;
+        font-weight: bold;
+    }
+
+    .squad-table th.sort-desc::after {
+        content: ' ↓';
+        position: absolute;
+        right: 8px;
+        font-weight: bold;
+    }
+
+    .squad-table tr:hover {
+        background-color: #f9fafb;
+    }
+
+    .dark-mode .squad-table tr:hover {
+        background-color: #4a5568;
+    }
+
+    .squad-table th:first-child,
+    .squad-table td:first-child {
+        position: sticky;
+        left: 0;
+        background-color: inherit;
+        z-index: 10;
+    }
+
+    .dark-mode .squad-table th:first-child,
+    .dark-mode .squad-table td:first-child {
+        background-color: #4a5568;
+    }
+
+    /* Botón volver arriba */
+    #back-to-top {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.3s, transform 0.3s;
+        z-index: 100;
+    }
+
+    #back-to-top.visible {
+        opacity: 1;
+    }
+
+    #back-to-top:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Botón modo oscuro */
+    #dark-mode-toggle {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: transform 0.3s;
+        z-index: 100;
+    }
+
+    #dark-mode-toggle:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    @media (max-width: 768px) {
+        .grid-cols-3 {
+            grid-template-columns: 1fr;
+        }
+        
+        .header-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+        }
+        
+        .header-description {
+            text-align: center;
+            margin-left: 0;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        .modification-controls {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .modification-controls select {
+            width: 100%;
+        }
+
+        .team-info {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .team-badge {
+            margin-right: 0;
+            margin-bottom: 15px;
+        }
+
+        .squad-table {
+            font-size: 10px;
+        }
+
+        .squad-table th, .squad-table td {
+            padding: 4px 6px;
+        }
+
+        #fullscreen-btn {
+            font-size: 10px;
+            padding: 6px 8px;
+        }
+
+        .modal-content {
+            width: 95%;
+            max-width: 95%;
+        }
+    }
+
+    /* Animaciones */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .fadeIn {
+        animation: fadeIn 0.5s ease forwards;
+    }
+
+    .slideIn {
+        animation: slideIn 0.5s ease forwards;
+    }
+
+    .delay-100 {
+        animation-delay: 0.1s;
+    }
+
+    .delay-200 {
+        animation-delay: 0.2s;
+    }
+
+    .delay-300 {
+        animation-delay: 0.3s;
+    }
+
+    .tick-animation {
+        animation: tick 0.5s ease-in-out;
+    }
+
+    @keyframes tick {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+
+    /* Toast message */
+    .toast {
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .toast.show {
+        opacity: 1;
+    }
+
+    /* Loading overlay para carga de plantilla - CORREGIDO */
+    .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.9);
+        display: none; /* Cambiado de flex a none por defecto */
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
+        border-radius: 0.5rem;
+    }
+
+    .loading-overlay.active {
+        display: flex; /* Solo se muestra cuando tiene la clase active */
+    }
+
+    .dark-mode .loading-overlay {
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+    </style>
+</head>
+<body>
+    <!-- Botón para pantalla completa (solo visible en iframe) -->
+    <button id="fullscreen-btn" class="hidden">
+        Ver en pantalla completa<br />
+        <span style="font-size: smaller;">(Recomendado)</span>
+    </button>
+    
+    <!-- Botón modo oscuro -->
+    <button id="dark-mode-toggle">
+        <i class="fas fa-moon"></i>
+    </button>
+    
+    <!-- Botón volver arriba -->
+    <button id="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Toast para mensajes -->
+    <div id="toast" class="toast hidden"></div>
+
+    <header>
+        <div class="field-bg"></div>
+        <div class="page-container">
+            <div class="header-content">
+                <div class="logo">
+                    <span style="cursor: pointer;" onclick="location.reload();">Generador de alineaciones</span>
+                    <a href="https://www.tusoccermanager.com/" rel="noopener noreferrer" target="_blank" class="ml-2 text-sm text-white/80 hover:text-white transition-colors">
+                        <span>TuSoccerManager.com</span>
+                        <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="header-description">
+                Tu alineación personalizada sin errores, en segundos.
+            </div>
+        </div>
+    </header>
+
+    <main class="page-container py-8">
+        <audio src="https://www.tusoccermanager.com/download?id=1499" id="confirmation-sound"></audio>
+        
+        <!-- Modal para mostrar la plantilla -->
+        <div id="squadModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="text-xl font-bold">Plantilla del equipo</h2>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700 text-xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="team-info">
+                        <img id="modalBadge" src="" alt="Escudo del equipo" class="team-badge" />
+                        <h3 id="modalTeamName" class="team-name"></h3>
+                    </div>
+                    <div id="modalSquadContent" class="overflow-x-auto">
+                        <!-- La plantilla se mostrará aquí -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuración de alineación -->
+        <div class="card slideIn mt-4">
+            <div class="card-header">
+                <span class="flex items-center">
+                    <i class="fas fa-cogs mr-2"></i>
+                    Configuración de alineación
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                            <div class="input-group">
+                                <label class="input-label" for="abbreviation">
+                                    <a href="https://www.tusoccermanager.com/h76-teamabbreviation-html" target="_blank" class="hover:underline">
+                                        Abreviación
+                                        <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                                    </a>
+                                    <span class="required-asterisk tooltip">*
+                                        <span class="tooltiptext">Campo obligatorio. Debe contener exactamente 3 letras.</span>
+                                    </span>
+                                </label>
+                                <input type="text" id="abbreviation" maxlength="3" pattern="[A-Za-z]{3}" class="input-field abbr-field" placeholder="EJ: FCB" />
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label" for="formation">Formación</label>
+                                <select id="formation" class="input-field select-field">
+                                    <option value="Aleatoria">Aleatoria</option>
+                                    <option value="4-4-2">4-4-2</option>
+                                    <option value="4-3-3">4-3-3</option>
+                                    <option value="4-5-1">4-5-1</option>
+                                    <option value="5-3-2">5-3-2</option>
+                                    <option value="3-4-3">3-4-3</option>
+                                    <option value="3-5-2">3-5-2</option>
+                                </select>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label" for="tactic">Táctica</label>
+                                <select id="tactic" class="input-field select-field">
+                                    <option value="Aleatoria">Aleatoria</option>
+                                    <option value="A">A (Atacante)</option>
+                                    <option value="C">C (Contragolpe)</option>
+                                    <option value="D">D (Defensiva)</option>
+                                    <option value="E">E (Europea)</option>
+                                    <option value="L">L (Balones largos)</option>
+                                    <option value="N">N (Equilibrada)</option>
+                                    <option value="P">P (Pases cortos)</option>
+                                    <option value="T">T (Temeraria)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label font-bold">Opciones avanzadas</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="fitPriority" class="checkbox-field" />
+                                    <span>Solo jugadores con Fit > 90</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input checked type="checkbox" id="substitutions" class="checkbox-field" />
+                                    <span>Sustituciones básicas</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="prioritizeSubs" class="checkbox-field" />
+                                    <span>Priorizar suplentes</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input checked type="checkbox" id="conditionals" class="checkbox-field" />
+                                    <span>Condicionales</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="mixStartersSubs" class="checkbox-field" />
+                                    <span>Combinar titulares con suplentes</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input checked type="checkbox" id="aggression" class="checkbox-field" />
+                                    <span>Agresividad</span>
+                                </label>
+                            </div>
+                            
+                            <div id="aggressionSlider" class="range-container mt-2">
+                                <input id="aggressionValue" class="range-field" type="range" min="1" max="20" value="10" />
+                                <span id="aggressionDisplay" class="range-value">10</span>
+                            </div>
+                            
+                            <div class="mt-4 flex items-center">
+                                <button class="btn btn-secondary btn-sm" onclick="document.getElementById('conditionalsInput').click()">
+                                    <i class="fas fa-file-import"></i> Importar condicionales
+                                </button>
+                                <input type="file" id="conditionalsInput" accept=".txt" class="file-input-hidden" onchange="loadConditionals()" />
+                                <span id="conditionalsLoaded" class="success-badge">
+                                    <i class="fas fa-check mr-1"></i> Archivo cargado
+                                </span>
+                                <button class="btn btn-danger btn-sm ml-2" onclick="clearConditionals()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label" for="squad">Plantilla</label>
+                        <div class="relative">
+                            <div class="flex justify-end mb-2">
+                                <select id="teamDropdown" class="input-field select-field mr-2">
+                                    <option value="">Seleccionar plantilla de Dropbox</option>
+                                    <option value="https://www.dropbox.com/scl/fi/9njb84ywzym3hhx5i2lg5/ajx.txt?rlkey=jhym2pqc9m60sioha0mmcil0o&e=1&dl=1">Ajax</option>
+                                    <option value="https://www.dropbox.com/scl/fi/wb6juf6y612xx28zrvu26/ars.txt?rlkey=6qe12dx31wj93kphgz5dh6qlz&e=1&dl=1">Arsenal</option>
+                                    <option value="https://www.dropbox.com/scl/fi/ucubvl04pfvqkev518dyo/asv.txt?rlkey=ubr83xqdq2v5r2g9twadabnib&e=1&st=com1va32&dl=1">Aston Villa</option>
+                                    <option value="https://www.dropbox.com/scl/fi/9w70qz8otcgwf57h25y07/ata.txt?rlkey=ussk413mrxz8iwe4d9tg7ls9i&e=1&st=u4t1vyqv&dl=1">Atalanta</option>
+                                    <option value="https://www.dropbox.com/scl/fi/tuhsywhyfywslnig6j5ar/atm.txt?rlkey=wg64adwz2y5eurb20m20201kr&e=1&dl=1">Atlético de Madrid</option>
+                                    <option value="https://www.dropbox.com/scl/fi/b2a0fyv07x3esuxpr1280/fcb.txt?rlkey=gjc2quuw368lwzf091a4tf89t&e=1&dl=1">Barcelona</option>
+                                    <option value="https://www.dropbox.com/scl/fi/egj2qgnrkjtt7jlxuhrx0/ble.txt?rlkey=9qodoqwtvzaklfh2t96rykp9i&e=1&st=2jg7bb7k&dl=1">Bayer Leverkusen</option>
+                                    <option value="https://www.dropbox.com/scl/fi/bq95u9q42jdhd156bw2dk/bay.txt?rlkey=9h8b1beoe8dimr9ryk1rd1mva&e=1&dl=1">Bayern de Múnich</option>
+                                    <option value="https://www.dropbox.com/scl/fi/6olskieubqse5hr31t6sz/bdo.txt?rlkey=wdgovvbf2npezjgjjul1101kt&e=1&dl=1">Borussia Dortmund</option>
+                                    <option value="https://www.dropbox.com/scl/fi/vaib05ni6t82hyrt5rg9v/che.txt?rlkey=fiv3v4p18gh9vc0ztma3v8pnv&e=1&dl=1">Chelsea</option>
+                                    <option value="https://www.dropbox.com/scl/fi/6hxb2kmntadzmqcm14zg9/int.txt?rlkey=y0gisxpu2fnixut8h3haxcydc&e=1&dl=1">Inter de Milán</option>
+                                    <option value="https://www.dropbox.com/scl/fi/x9ysiu5eyrpkdaf1pfjpe/juv.txt?rlkey=jxocqh225uco9o2lx54mvtz61&e=1&dl=1">Juventus</option>
+                                    <option value="https://www.dropbox.com/scl/fi/hz76l1lkyqvuuns4hrreo/liv.txt?rlkey=3afux4q929md83z041di2coxe&e=1&dl=1">Liverpool</option>
+                                    <option value="https://www.dropbox.com/scl/fi/wcq9i1o9bxppwbyu3ggv4/mci.txt?rlkey=kwxrxndbhcxisdf5339ldef1k&e=1&dl=1">Manchester City</option>
+                                    <option value="https://www.dropbox.com/scl/fi/2j17u24ig5s5hzbvg0zkp/man.txt?rlkey=9cs3sj1debd0cbw3mxkizrzfz&e=1&dl=1">Manchester United</option>
+                                    <option value="https://www.dropbox.com/scl/fi/klb7hcy0epivuvkmio8o2/mil.txt?rlkey=7plny75gkdl22tkkg8wkvmo1s&e=1&dl=1">Milan</option>
+                                    <option value="https://www.dropbox.com/scl/fi/zpou5oz6iv51u21helwdg/nap.txt?rlkey=gjekp32w79pxwtegk1s3oei06&e=1&dl=1">Nápoles</option>
+                                    <option value="https://www.dropbox.com/scl/fi/46m0eyfru9g97ch8c4ryy/new.txt?rlkey=zbbt3pe37i2bocxh946sz1axf&e=1&st=bk9c4sji&dl=1">Newcastle United</option>
+                                    <option value="https://www.dropbox.com/scl/fi/k2f61aq73xmm9eknqc0pm/psg.txt?rlkey=syd3nsi8zj826ysxx70ldtbur&e=1&dl=1">PSG</option>
+                                    <option value="https://www.dropbox.com/scl/fi/8ick97tco5apa2rgg01uv/rbl.txt?rlkey=kn17krqcqhyefeydngn2c3yqj&e=1&dl=1">RB Leipzig</option>
+                                    <option value="https://www.dropbox.com/scl/fi/2xida739oitrf4gilso4v/rma.txt?rlkey=ybjbuajy747quooqkzt5rsai3&e=1&dl=1">Real Madrid</option>
+                                    <option value="https://www.dropbox.com/scl/fi/n64w9h04e2f8h0tflt1kg/sev.txt?rlkey=z72w5eyq9vacdgr8655yzmthq&e=1&dl=1">Sevilla</option>
+                                    <option value="https://www.dropbox.com/scl/fi/ldj3rdbrip4466xdvu54e/tot.txt?rlkey=fpj5emqz2bwxue6si2p5slkci&e=1&dl=1">Tottenham Hotspur</option>
+                                    <option value="https://www.dropbox.com/scl/fi/bo2rw6u9sndoel5hzfcmn/vil.txt?rlkey=kz37s2mwg71cgls3903skid2p&e=1&dl=1">Villarreal</option>
+                                </select>
+                                
+                                <button class="btn btn-primary btn-sm" onclick="pasteSquad()">
+                                    <i class="fas fa-paste"></i> Pegar
+                                </button>
+                                
+                                <button class="btn btn-primary btn-sm ml-2" onclick="document.getElementById('fileInput').click()">
+                                    <i class="fas fa-upload"></i> Cargar
+                                </button>
+                                <input type="file" id="fileInput" accept=".txt" class="file-input-hidden" onchange="loadFile()" />
+                                
+                                <button class="btn btn-danger btn-sm ml-2" onclick="clearSquad()">
+                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                </button>
+                            </div>
+                            
+                            <!-- Loading overlay para carga de plantilla - CORREGIDO -->
+                            <div id="squadLoading" class="loading-overlay">
+                                <div class="flex flex-col items-center">
+                                    <div class="spinner"></div>
+                                    <p class="mt-2 text-gray-700 dark:text-gray-300">Cargando plantilla...</p>
+                                </div>
+                            </div>
+                            
+                            <textarea id="squad" class="textarea-field" placeholder="Tu plantilla de Dropbox aquí..."></textarea>
+                            
+                            <div class="mt-2">
+                                <a href="#" id="viewSquadLink" class="text-sm text-blue-600 hover:underline">Ver plantilla</a>
+                            </div>
+                            
+                            <button class="btn btn-secondary btn-lg mt-4 w-full" onclick="generateLineups()">
+                                <i class="fas fa-magic mr-2"></i> Generar tres alineaciones
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alineaciones sugeridas -->
+        <div class="card slideIn delay-100 hidden" id="lineups-section">
+            <div class="card-header">
+                <span class="flex items-center">
+                    <i class="fas fa-users mr-2"></i>
+                    Alineaciones sugeridas
+                </span>
+            </div>
+            <div class="card-body">
+                <div id="lineups-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="slideIn delay-100">
+                        <div class="lineup-card">
+                            <div class="lineup-title">
+                                <span>Opción 1</span>
+                                <div class="flex gap-1">
+                                    <div class="tooltip">
+                                        <button onclick="copyLineup('output1', this)" class="btn-icon">
+                                            <img alt="Copiar" src="https://2img.net/i.imgur.com/dFM5cLr.png" />
+                                        </button>
+                                        <span class="tooltiptext">Copiar al portapapeles</span>
+                                    </div>
+                                    <div class="tooltip">
+                                        <button onclick="downloadLineup('output1', '${abbreviation.toLowerCase()}sht1.txt', this)" class="btn-icon">
+                                            <img alt="Descargar" src="https://2img.net/i.imgur.com/PsdweS7.png" />
+                                        </button>
+                                        <span class="tooltiptext">Descargar alineación</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="output1" class="lineup-content"></div>
+                            <div id="modification-1" class="modification-card">
+                                <div class="modification-title">
+                                    <i class="fas fa-arrows-left-right"></i> Realizar modificaciones
+                                </div>
+                                <div class="modification-controls">
+                                    <select onchange="updatePlayerIn(1, this.value.split('|')[0] || ''); modifyLineup(1)" id="player-out-1" class="input-field select-field">
+                                        <option value="">Remplazar a...</option>
+                                    </select>
+                                    <i class="fas fa-arrows-left-right text-gray-500"></i>
+                                    <select onchange="modifyLineup(1)" id="player-in-1" class="input-field select-field">
+                                        <option value="">por...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="penalty-1" class="modification-card">
+                                <div class="modification-title">
+                                    <i class="fas fa-futbol"></i> Cambiar lanzador de penaltis
+                                </div>
+                                <div class="modification-controls">
+                                    <select onchange="changePenaltyTaker(1, this.value)" id="penalty-taker-1" class="input-field select-field">
+                                        <option value="">Seleccionar lanzador...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slideIn delay-200">
+                        <div class="lineup-card">
+                            <div class="lineup-title">
+                                <span>Opción 2</span>
+                                <div class="flex gap-1">
+                                    <div class="tooltip">
+                                        <button onclick="copyLineup('output2', this)" class="btn-icon">
+                                            <img alt="Copiar" src="https://2img.net/i.imgur.com/dFM5cLr.png" />
+                                        </button>
+                                        <span class="tooltiptext">Copiar al portapapeles</span>
+                                    </div>
+                                    <div class="tooltip">
+                                        <button onclick="downloadLineup('output2', '${abbreviation.toLowerCase()}sht2.txt', this)" class="btn-icon">
+                                            <img alt="Descargar" src="https://2img.net/i.imgur.com/PsdweS7.png" />
+                                        </button>
+                                        <span class="tooltiptext">Descargar alineación</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="output2" class="lineup-content"></div>
+                            <div id="modification-2" class="modification-card">
+                                <div class="modification-title">
+                                    <i class="fas fa-arrows-left-right"></i> Realizar modificaciones
+                                </div>
+                                <div class="modification-controls">
+                                    <select onchange="updatePlayerIn(2, this.value.split('|')[0] || ''); modifyLineup(2)" id="player-out-2" class="input-field select-field">
+                                        <option value="">Remplazar a...</option>
+                                    </select>
+                                    <i class="fas fa-arrows-left-right text-gray-500"></i>
+                                    <select onchange="modifyLineup(2)" id="player-in-2" class="input-field select-field">
+                                        <option value="">por...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="penalty-2" class="modification-card">
+                                <div class="modification-title">
+                                    <i class="fas fa-futbol"></i> Cambiar lanzador de penaltis
+                                </div>
+                                <div class="modification-controls">
+                                    <select onchange="changePenaltyTaker(2, this.value)" id="penalty-taker-2" class="input-field select-field">
+                                        <option value="">Seleccionar lanzador...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slideIn delay-300">
+                        <div class="lineup-card">
+                            <div class="lineup-title">
+                                <span>Opción 3</span>
+                                <div class="flex gap-1">
+                                    <div class="tooltip">
+                                        <button onclick="copyLineup('output3', this)" class="btn-icon">
+                                            <img alt="Copiar" src="https://2img.net/i.imgur.com/dFM5cLr.png" />
+                                        </button>
+                                        <span class="tooltiptext">Copiar al portapapeles</span>
+                                    </div>
+                                    <div class="tooltip">
+                                        <button onclick="downloadLineup('output3', '${abbreviation.toLowerCase()}sht3.txt', this)" class="btn-icon">
+                                            <img alt="Descargar" src="https://2img.net/i.imgur.com/PsdweS7.png" />
+                                        </button>
+                                        <span class="tooltiptext">Descargar alineación</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="output3" class="lineup-content"></div>
+                            <div id="modification-3" class="modification-card">
+                                <div class="modification-title">
+                                    <i class="fas fa-arrows-left-right"></i> Realizar modificaciones
+                                </div>
+                                <div class="modification-controls">
+                                    <select onchange="updatePlayerIn(3, this.value.split('|')[0] || ''); modifyLineup(3)" id="player-out-3" class="input-field select-field">
+                                        <option value="">Remplazar a...</option>
+                                    </select>
+                                    <i class="fas fa-arrows-left-right text-gray-500"></i>
+                                    <select onchange="modifyLineup(3)" id="player-in-3" class="input-field select-field">
+                                        <option value="">por...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="penalty-3" class="modification-card">
+                                <div class="modification-title">
+                                    <i class="fas fa-futbol"></i> Cambiar lanzador de penaltis
+                                </div>
+                                <div class="modification-controls">
+                                    <select onchange="changePenaltyTaker(3, this.value)" id="penalty-taker-3" class="input-field select-field">
+                                        <option value="">Seleccionar lanzador...</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jugadores no disponibles -->
+        <div class="card slideIn delay-100 hidden" id="unavailable-players">
+            <div class="card-header">
+                <span class="flex items-center">
+                    <i class="fas fa-user-slash mr-2"></i>
+                    Jugadores no disponibles
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="text-sm" id="unavailable-players-content"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Detectar si estamos en un iframe
+        if (window.self !== window.top) {
+            document.getElementById('fullscreen-btn').classList.remove('hidden');
+        }
+
+        // Configurar el botón de pantalla completa
+        document.getElementById('fullscreen-btn').addEventListener('click', function() {
+            window.open('https://www.tusoccermanager.com/h43-lineupgenerator-html', '_blank');
+        });
+
+        // Configurar el botón de modo oscuro
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        // Verificar preferencia guardada o del sistema
+        if (localStorage.getItem('dark-mode') === 'enabled' || 
+            (localStorage.getItem('dark-mode') === null && (prefersDarkScheme.matches || window.self !== window.top || window.innerWidth < 1024))) {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+
+        darkModeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('dark-mode', 'enabled');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                localStorage.setItem('dark-mode', 'disabled');
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        });
+
+        // Configurar el botón de volver arriba
+        const backToTopBtn = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Configurar el enlace "Ver plantilla"
+        document.getElementById('viewSquadLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            const squadText = document.getElementById('squad').value;
+            if (!squadText.trim()) {
+                showToast('No hay plantilla para mostrar.', 'error');
+                return;
+            }
+
+            // Obtener el equipo seleccionado
+            const teamDropdown = document.getElementById('teamDropdown');
+            const selectedTeam = teamDropdown.options[teamDropdown.selectedIndex].text;
+            
+            // Establecer el nombre del equipo en el modal
+            document.getElementById('modalTeamName').textContent = selectedTeam;
+
+            // Obtener el escudo del equipo
+            fetchTeamBadge(selectedTeam);
+
+            // Formatear y mostrar la plantilla
+            displayFormattedSquad(squadText);
+
+            // Mostrar el modal
+            document.getElementById('squadModal').style.display = 'flex';
+        });
+
+        // Configurar el botón para cerrar el modal
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('squadModal').style.display = 'none';
+        });
+
+        // Cerrar el modal al hacer clic fuera de él
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('squadModal');
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Función para mostrar toast
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast';
+            
+            if (type === 'error') {
+                toast.style.background = 'linear-gradient(135deg, var(--error) 0%, #dc2626 100%)';
+            } else if (type === 'success') {
+                toast.style.background = 'linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%)';
+            }
+            
+            toast.classList.remove('hidden');
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 300);
+            }, 3000);
+        }
+
+        // Función para obtener el escudo del equipo
+        async function fetchTeamBadge(teamName) {
+            try {
+                const response = await fetch('https://www.tusoccermanager.com/h63-teambadgedb-html');
+                const html = await response.text();
+                
+                // Parsear el HTML para encontrar el escudo del equipo
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Buscar en la lista de escudos
+                const listItems = doc.querySelectorAll('#shields-list li');
+                let badgeUrl = '';
+                
+                for (const item of listItems) {
+                    const text = item.textContent.trim();
+                    // El formato es: "Nombre del equipo: URL"
+                    const parts = text.split(':');
+                    if (parts.length >= 2) {
+                        const name = parts[0].trim();
+                        const url = parts.slice(1).join(':').trim(); // Unir el resto por si hay más de un ":"
+                        if (name === teamName) {
+                            badgeUrl = url;
+                            break;
+                        }
+                    }
+                }
+                
+                // Si no se encuentra, usar un escudo por defecto
+                if (!badgeUrl) {
+                    badgeUrl = 'https://via.placeholder.com/96x64/3B82F6/FFFFFF?text=' + teamName.charAt(0);
+                }
+                
+                document.getElementById('modalBadge').src = badgeUrl;
+            } catch (error) {
+                console.error('Error al cargar el escudo:', error);
+                document.getElementById('modalBadge').src = 'https://via.placeholder.com/96x64/3B82F6/FFFFFF?text=' + teamName.charAt(0);
+            }
+        }
+
+        // Función para formatear nombres de jugadores (solo para el pop-up)
+        function formatPlayerName(name) {
+            if (!name.includes('_')) return name;
+
+            // Caso especial: M_de_Ligt -> M. de Ligt
+            if (name.split('_').length === 3) {
+                const parts = name.split('_');
+                if (parts[0].length === 1) {
+                    return `${parts[0]}. ${parts[1]} ${parts[2]}`;
+                }
+            }
+
+            const parts = name.split('_');
+            if (parts.length !== 2) return name.replace(/_/g, ' ');
+
+            const firstPart = parts[0];
+            const secondPart = parts[1];
+
+            // Si la segunda parte es una sola letra
+            if (secondPart.length === 1) {
+                return `${firstPart} ${secondPart}.`;
+            }
+            // Si la primera parte tiene 4 o más caracteres
+            else if (firstPart.length >= 4) {
+                return `${firstPart} ${secondPart}`;
+            }
+            // Si la primera parte tiene 2 o 3 caracteres
+            else if (firstPart.length >= 2 && firstPart.length <= 3) {
+                return `${firstPart} ${secondPart}`;
+            }
+            // Para otros casos (como S_Rochet)
+            else {
+                return `${firstPart}. ${secondPart}`;
+            }
+        }
+
+        // Variables para la ordenación de la tabla
+        let currentSortColumn = null;
+        let currentSortDirection = 'asc';
+
+        // Función para ordenar la tabla
+        function sortTable(columnIndex) {
+            const table = document.querySelector('.squad-table tbody');
+            const rows = Array.from(table.querySelectorAll('tr'));
+            const isNumeric = columnIndex > 0; // Todas las columnas excepto la primera (nombre) son numéricas
+            
+            // Si hacemos clic en la misma columna, cambiamos la dirección
+            if (currentSortColumn === columnIndex) {
+                currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSortColumn = columnIndex;
+                currentSortDirection = 'asc';
+            }
+            
+            // Ordenar las filas
+            rows.sort((a, b) => {
+                const aCell = a.cells[columnIndex];
+                const bCell = b.cells[columnIndex];
+                
+                let aValue = aCell.textContent.trim();
+                let bValue = bCell.textContent.trim();
+                
+                if (isNumeric) {
+                    // Para columnas numéricas, convertir a número
+                    aValue = parseFloat(aValue) || 0;
+                    bValue = parseFloat(bValue) || 0;
+                    return currentSortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+                } else {
+                    // Para columna de nombre, ordenar alfabéticamente
+                    return currentSortDirection === 'asc' 
+                        ? aValue.localeCompare(bValue)
+                        : bValue.localeCompare(aValue);
+                }
+            });
+            
+            // Limpiar indicadores de ordenación anteriores
+            document.querySelectorAll('.squad-table th').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+            });
+            
+            // Añadir indicador de ordenación actual
+            const currentHeader = document.querySelector(`.squad-table th:nth-child(${columnIndex + 1})`);
+            currentHeader.classList.add(currentSortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+            
+            // Reordenar las filas en la tabla
+            rows.forEach(row => table.appendChild(row));
+        }
+
+        // Función para formatear y mostrar la plantilla con ordenación
+        function displayFormattedSquad(squadText) {
+            const lines = squadText.trim().split('\n');
+            let formattedHTML = '';
+            
+            if (lines.length > 0) {
+                // Crear tabla para la plantilla
+                formattedHTML = '<table class="squad-table">';
+                
+                // Encabezados
+                if (lines.length > 1) {
+                    const headers = lines[0].split(/\s+/).filter(h => h);
+                    formattedHTML += '<thead><tr>';
+                    headers.forEach((header, index) => {
+                        formattedHTML += `<th onclick="sortTable(${index})">${header}</th>`;
+                    });
+                    formattedHTML += '</tr></thead>';
+                }
+                
+                // Datos de jugadores
+                formattedHTML += '<tbody>';
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim() && !lines[i].includes('---')) {
+                        const playerData = lines[i].split(/\s+/).filter(d => d);
+                        if (playerData.length >= 1) {
+                            formattedHTML += '<tr>';
+                            // Formatear solo el nombre del jugador (columna 0)
+                            const formattedName = formatPlayerName(playerData[0]);
+                            playerData[0] = formattedName;
+                            
+                            playerData.forEach((data, index) => {
+                                formattedHTML += `<td>${data}</td>`;
+                            });
+                            formattedHTML += '</tr>';
+                        }
+                    }
+                }
+                formattedHTML += '</tbody></table>';
+            } else {
+                formattedHTML = '<p>No hay datos de plantilla para mostrar.</p>';
+            }
+            
+            document.getElementById('modalSquadContent').innerHTML = formattedHTML;
+            
+            // Resetear variables de ordenación
+            currentSortColumn = null;
+            currentSortDirection = 'asc';
+        }
+
+        // Validación de condicionales basada en la página de referencia
+        function validateConditionals(conditionalsText) {
+            const lines = conditionalsText.split('\n');
+            const errors = [];
+            const validConditionals = [];
+            
+            const targets = {
+                INJURED: {partial: 4, letters: 'INJURED'},
+                YELLOW: {partial: 4, letters: 'YELLOW'},
+                RED: {partial: 2, letters: 'RED'},
+                SUB: {partial: 2, letters: 'SUB'},
+                CHANGEPOS: {partial: 7, letters: 'CHANGEPOS'},
+                CHANGEAGG: {partial: 7, letters: 'CHANGEAGG'},
+                SHOTS: {partial: 3, letters: 'SHOTS'},
+                SCORE: {partial: 3, letters: 'SCORE'},
+                TACTIC: {partial: 4, letters: 'TACTIC'}
+            };
+
+            const conditionPattern = `(?:(?:MIN\\s*(?:=|>=|<=)\\s+(?:[1-9]\\d?|1[01]\\d|120))|(?:SCORE\\s+(?:=|>=|<=)\\s+[+-]?\\d+)|(?:SHOTS\\s+(?:=|>=|<=)\\s+[+-]?\\d+)|(?:INJURED\\s+(?:GK|DF|DM|MF|AM|FW|[1-9]|1[0-6]))|(?:YELLOW\\s+(?:GK|DF|DM|MF|AM|FW|[1-9]|1[0-6]))|(?:RED\\s+(?:GK|DF|DM|MF|AM|FW|[1-9]|1[0-6])))`;
+
+            const tacticRegex = new RegExp(`^TACTIC\\s+[ACELNPDT]\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+            const subRegex = new RegExp(`^SUB\\s+([1-9]|1[0-6])\\s+([1-9]|1[0-6])\\s+(GK|DF|DM|MF|AM|FW)\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+            const subNewRegex = new RegExp(`^SUB\\s+(GK|DF|DM|MF|AM|FW)\\s+(1[2-6])\\s+(GK|DF|DM|MF|AM|FW)\\s+IF\\s+(INJURED|YELLOW|RED)\\s+(GK|DF|DM|MF|AM|FW)$`);
+            const changePosRegex = new RegExp(`^CHANGEPOS\\s+([1-9]|1[0-6])\\s+(GK|DF|DM|MF|AM|FW)\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+            const changeAggRegex = new RegExp(`^CHANGEAGG\\s+([1-9]\\d|20)\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+
+            function getSuggestionsForWord(word) {
+                let sugg = [];
+                const wordSorted = word.split('').sort().join('');
+                for (let [t, d] of Object.entries(targets)) {
+                    const tSorted = t.split('').sort().join('');
+                    if (word.length === t.length && wordSorted === tSorted) sugg.push(t);
+                }
+                const changeSorted = 'CHANGE'.split('').sort().join('');
+                if (word.length === 6 && wordSorted === changeSorted) {
+                    sugg.push('CHANGEPOS');
+                    sugg.push('CHANGEAGG');
+                }
+                for (let [t, d] of Object.entries(targets)) {
+                    const wordSet = new Set(word.split(''));
+                    const tSet = new Set(d.letters.split(''));
+                    const inter = new Set([...wordSet].filter(x => tSet.has(x)));
+                    if (inter.size >= d.partial && !sugg.includes(t)) sugg.push(t);
+                }
+                return sugg;
+            }
+
+            function getLineSuggestions(trimmed) {
+                const words = trimmed.split(/\s+/);
+                let suggestions = [];
+                let replacements = {};
+                for (let word of words) {
+                    if (/^[A-Z]+$/.test(word) && word.length > 1) {
+                        const ws = getSuggestionsForWord(word);
+                        if (ws.length > 0) {
+                            const best = ws[0];
+                            if (best !== word) {
+                                suggestions.push(`"${word}" -> "${best}"`);
+                                replacements[word] = best;
+                            }
+                        }
+                    }
+                }
+                const corrected = words.map(w => replacements[w] || w).join(' ');
+                const isValid = tacticRegex.test(corrected) || subRegex.test(corrected) || subNewRegex.test(corrected) || changePosRegex.test(corrected) || changeAggRegex.test(corrected);
+                if (isValid && suggestions.length > 0) return corrected;
+                return '';
+            }
+
+            lines.forEach((line, index) => {
+                const lineNumber = index + 1;
+                const trimmed = line.trim();
+                
+                // Saltar líneas vacías
+                if (!trimmed) return;
+                
+                // Verificar que esté en mayúsculas
+                if (/[a-z]/.test(trimmed)) {
+                    errors.push(`Línea ${lineNumber}: debe estar completamente en MAYÚSCULAS: ${trimmed}`);
+                    return;
+                }
+                
+                const ifCount = (trimmed.match(/IF/g) || []).length;
+                if (ifCount !== 1) {
+                    errors.push(`Línea ${lineNumber}: número incorrecto de "IF" (encontrado ${ifCount}, debe ser exactamente 1)`);
+                    return;
+                }
+                
+                let isValid = false;
+                let errorMsg = '';
+                
+                if (tacticRegex.test(trimmed)) {
+                    isValid = true;
+                } else if (subRegex.test(trimmed) || subNewRegex.test(trimmed)) {
+                    isValid = true;
+                } else if (changePosRegex.test(trimmed)) {
+                    isValid = true;
+                } else if (changeAggRegex.test(trimmed)) {
+                    isValid = true;
+                } else {
+                    errorMsg = `Línea ${lineNumber}: sintaxis incorrecta: ${trimmed}`;
+                    const correctedLine = getLineSuggestions(trimmed);
+                    if (correctedLine) {
+                        errorMsg += `. Sugerencia: ${correctedLine}`;
+                    }
+                    errors.push(errorMsg);
+                }
+                
+                if (isValid) {
+                    validConditionals.push(trimmed);
+                }
+            });
+            
+            return {
+                isValid: errors.length === 0,
+                errors: errors,
+                validConditionals: validConditionals.join('\n')
+            };
+        }
+
+        // Resto del código JavaScript existente...
+        document.getElementById('aggression').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('aggressionSlider').classList.remove('hidden');
+            } else {
+                document.getElementById('aggressionSlider').classList.add('hidden');
+            }
+        });
+        
+        document.getElementById('aggressionValue').addEventListener('input', function() {
+            document.getElementById('aggressionDisplay').innerText = this.value;
+        });
+
+        // Make prioritizeSubs and mixStartersSubs mutually exclusive
+        document.getElementById('prioritizeSubs').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('mixStartersSubs').checked = false;
+            }
+        });
+        
+        document.getElementById('mixStartersSubs').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('prioritizeSubs').checked = false;
+            }
+        });
+
+        // Team dropdown event listener con animación de carga - CORREGIDO
+        document.getElementById('teamDropdown').addEventListener('change', async function() {
+            const url = this.value;
+            if (!url) return;
+            
+            // Mostrar loading overlay
+            const squadLoading = document.getElementById('squadLoading');
+            squadLoading.classList.add('active');
+            this.disabled = true;
+            
+            try {
+                await loadFromDropbox(url);
+                showToast('Plantilla cargada correctamente', 'success');
+            } catch (error) {
+                showToast(`Error al cargar la plantilla: ${error.message}`, 'error');
+            } finally {
+                // Ocultar loading overlay
+                squadLoading.classList.remove('active');
+                this.disabled = false;
+            }
+        });
+
+        let allPlayers = []; // Store all available players for modifications
+        let fullPlayers = []; // Store all players including unavailable
+        let lineups = [[], [], []]; // Store lineups for each option
+        let conditionalsText = ''; // Store imported conditionals
+        let substitutionsText = ['', '', '']; // Store substitutions for each lineup
+
+        async function pasteSquad() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('squad').value = text;
+                showToast('Plantilla pegada correctamente', 'success');
+            } catch (err) {
+                showToast('Error al acceder al portapapeles. Por favor, pega el contenido manualmente.', 'error');
+            }
+        }
+
+        function loadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('squad').value = e.target.result;
+                    showToast('Archivo cargado correctamente', 'success');
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function loadConditionals() {
+            const conditionalsInput = document.getElementById('conditionalsInput');
+            const file = conditionalsInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const text = e.target.result;
+                    
+                    // Validar los condicionales usando la lógica de la página de referencia
+                    const validation = validateConditionals(text);
+                    
+                    if (validation.isValid || validation.validConditionals) {
+                        // Usar solo los condicionales válidos
+                        conditionalsText = validation.validConditionals;
+                        document.getElementById('conditionalsLoaded').classList.remove('hidden');
+                        document.getElementById('conditionalsLoaded').classList.add('visible');
+                        showToast('Condicionales importados correctamente', 'success');
+                        
+                        // Mostrar advertencias si hubo errores
+                        if (validation.errors.length > 0) {
+                            setTimeout(() => {
+                                alert('Algunos condicionales tenían errores y fueron omitidos:\n\n' + validation.errors.join('\n'));
+                            }, 500);
+                        }
+                    } else {
+                        conditionalsText = '';
+                        document.getElementById('conditionalsLoaded').classList.remove('visible');
+                        document.getElementById('conditionalsLoaded').classList.add('hidden');
+                        showToast('Error en los condicionales', 'error');
+                        setTimeout(() => {
+                            alert('Errores en los condicionales:\n\n' + validation.errors.join('\n'));
+                        }, 500);
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function clearConditionals() {
+            conditionalsText = '';
+            document.getElementById('conditionalsLoaded').classList.remove('visible');
+            document.getElementById('conditionalsLoaded').classList.add('hidden');
+            document.getElementById('conditionalsInput').value = '';
+            showToast('Se eliminaron los condicionales importados', 'success');
+        }
+
+        function clearSquad() {
+            document.getElementById('squad').value = '';
+            document.getElementById('teamDropdown').value = '';
+            showToast('Plantilla eliminada', 'success');
+        }
+
+        async function loadFromDropbox(url) {
+            try {
+                const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
+                const response = await fetch(proxyUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                
+                const text = await response.text();
+                document.getElementById('squad').value = text;
+                
+                // Set the abbreviation based on the selected team
+                const teamDropdown = document.getElementById('teamDropdown');
+                const selectedTeam = teamDropdown.options[teamDropdown.selectedIndex].text;
+                const teamAbbrMap = {
+                    'Ajax': 'AJX',
+                    'Arsenal': 'ARS',
+                    'Aston Villa': 'ASV',
+                    'Atalanta': 'ATA',
+                    'Atlético de Madrid': 'ATM',
+                    'Barcelona': 'FCB',
+                    'Bayer Leverkusen': 'BLE',
+                    'Bayern de Múnich': 'BAY',
+                    'Borussia Dortmund': 'BDO',
+                    'Chelsea': 'CHE',
+                    'Inter de Milán': 'INT',
+                    'Juventus': 'JUV',
+                    'Liverpool': 'LIV',
+                    'Manchester City': 'MCI',
+                    'Manchester United': 'MAN',
+                    'Milan': 'MIL',
+                    'Nápoles': 'NAP',
+                    'Newcastle United': 'NEW',
+                    'PSG': 'PSG',
+                    'RB Leipzig': 'RBL',
+                    'Real Madrid': 'RMA',
+                    'Sevilla': 'SEV',
+                    'Tottenham Hotspur': 'TOT',
+                    'Villarreal': 'VIL'
+                };
+                
+                if (teamAbbrMap[selectedTeam]) {
+                    document.getElementById('abbreviation').value = teamAbbrMap[selectedTeam];
+                }
+                
+            } catch (error) {
+                showToast(`Error al cargar desde Dropbox: ${error.message}`, 'error');
+                console.error('Error:', error);
+                throw error;
+            }
+        }
+
+        function validateAbbreviation() {
+            const abbreviationInput = document.getElementById('abbreviation');
+            const abbreviation = abbreviationInput.value.trim();
+            
+            // Remove any error styling
+            abbreviationInput.classList.remove('error');
+            
+            // Check if abbreviation is exactly 3 letters
+            if (abbreviation.length !== 3 || !/^[A-Za-z]{3}$/.test(abbreviation)) {
+                abbreviationInput.classList.add('error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function generateLineups() {
+            // Reproducir sonido
+            document.getElementById('confirmation-sound').play();
+            
+            // Validate abbreviation
+            if (!validateAbbreviation()) {
+                showError('La abreviación debe contener exactamente 3 letras.');
+                return;
+            }
+
+            const abbreviation = document.getElementById('abbreviation').value.toUpperCase();
+            let tactic = document.getElementById('tactic').value;
+            let formation = document.getElementById('formation').value;
+            const fitPriority = document.getElementById('fitPriority').checked;
+            const substitutions = document.getElementById('substitutions').checked;
+            const prioritizeSubs = document.getElementById('prioritizeSubs').checked;
+            const mixStartersSubs = document.getElementById('mixStartersSubs').checked;
+            const aggressionChecked = document.getElementById('aggression').checked;
+            const conditionalsChecked = document.getElementById('conditionals').checked;
+            const aggressionValue = aggressionChecked ? document.getElementById('aggressionValue').value : null;
+
+            if (!document.getElementById('squad').value.trim()) {
+                showError('Por favor, introduce la plantilla del equipo.');
+                return;
+            }
+
+            // Handle random tactic, excluding 'T'
+            if (tactic === 'Aleatoria') {
+                const tactics = ['A', 'C', 'D', 'E', 'L', 'N', 'P'];
+                tactic = tactics[Math.floor(Math.random() * tactics.length)];
+            }
+
+            // Handle random formation
+            if (formation === 'Aleatoria') {
+                const formations = ['4-4-2', '4-3-3', '4-5-1', '5-3-2', '3-4-3', '3-5-2'];
+                formation = formations[Math.floor(Math.random() * formations.length)];
+            }
+
+            try {
+                const players = parseSquad(document.getElementById('squad').value, 'available');
+                allPlayers = players; // Store for modifications
+                fullPlayers = parseSquad(document.getElementById('squad').value, 'all');
+
+                // Show unavailable players (usar nombres originales)
+                const unavailablePlayers = parseSquad(document.getElementById('squad').value, 'unavailable');
+                const unavailableContent = document.getElementById('unavailable-players-content');
+                if (unavailablePlayers.length > 0) {
+                    unavailableContent.innerHTML = unavailablePlayers.map(player => {
+                        const reason = player.injured > 0 ? 'Lesión' : 'Sanción';
+                        const icon = player.injured > 0 ? 'fa-user-injured' : 'fa-ban';
+                        return `<div class="flex items-center gap-2"><span>${player.name}</span><span class="text-gray-500">(${reason} <i class="fas ${icon} text-xs"></i>)</span></div>`;
+                    }).join('');
+                } else {
+                    unavailableContent.innerHTML = '<div class="text-gray-500">Todos los jugadores están disponibles.</div>';
+                }
+                document.getElementById('unavailable-players').classList.remove('hidden');
+
+                // Show lineups section
+                document.getElementById('lineups-section').classList.remove('hidden');
+
+                // Show modification sections
+                for (let i = 1; i <= 3; i++) {
+                    document.getElementById(`modification-${i}`).style.display = 'block';
+                    document.getElementById(`penalty-${i}`).style.display = 'block';
+                }
+
+                // Define conditional categories
+                const category1 = [
+                    'TACTIC L IF SCORE = 3',
+                    'TACTIC P IF SCORE = 2',
+                    'TACTIC D IF SCORE = -3',
+                    'TACTIC A IF MIN >= 65 SCORE <= -1',
+                    'TACTIC C IF MIN >= 50 SCORE >= 1',
+                    'TACTIC D IF MIN >= 70 SCORE >= 2'
+                ];
+                const category2 = [
+                    'CHANGEPOS 9 AM IF MIN = 65 SCORE <= -1',
+                    'CHANGEPOS 7 DM IF MIN >= 65 SCORE <= 1',
+                    'CHANGEAGG 18 IF SCORE <= -2',
+                    'CHANGEAGG 10 IF SCORE <= 2'
+                ];
+
+                for (let i = 1; i <= 3; i++) {
+                    const lineup = createLineup(players, fitPriority, i, formation, prioritizeSubs, mixStartersSubs, tactic);
+                    lineups[i - 1] = lineup; // Store lineup for modifications
+                    let formattedLineup = formatLineup(abbreviation, lineup, tactic, aggressionValue, formation);
+
+                    // Store substitutions text
+                    substitutionsText[i - 1] = '';
+
+                    // Add random substitutions if checked
+                    if (substitutions) {
+                        const dfPlayer = Math.random() < 0.5 ? 2 : 3;
+                        const mfPlayer = Math.random() < 0.5 ? 7 : 8;
+                        const fwPlayer = Math.random() < 0.5 ? 11 : 10;
+                        const substitutionsList = [
+                            { text: `SUB ${dfPlayer} 13 DF IF MIN = ${Math.floor(Math.random() * (90 - 45 + 1)) + 45}`, min: 0 },
+                            { text: `SUB ${mfPlayer} 15 MF IF MIN = ${Math.floor(Math.random() * (90 - 45 + 1)) + 45}`, min: 0 },
+                            { text: `SUB ${fwPlayer} 16 FW IF MIN = ${Math.floor(Math.random() * (90 - 45 + 1)) + 45}`, min: 0 }
+                        ];
+                        // Extract minutes and sort by minute
+                        substitutionsList.forEach(sub => {
+                            const minMatch = sub.text.match(/MIN = (\d+)/);
+                            if (minMatch) sub.min = parseInt(minMatch[1]);
+                        });
+                        substitutionsList.sort((a, b) => a.min - b.min);
+                        substitutionsText[i - 1] = substitutionsList.map(sub => sub.text).join('\n');
+                        formattedLineup += `\n\n${substitutionsText[i - 1]}`;
+                    }
+
+                    // Add conditionals if checked or if we have imported conditionals
+                    if (conditionalsChecked || conditionalsText) {
+                        let finalConditionals = '';
+                        
+                        if (conditionalsChecked && conditionalsText) {
+                            // Combinar condicionales generados aleatoriamente con los importados
+                            // Select 2 random lines from Category 1, excluding the current tactic
+                            const shuffledCat1 = category1.filter(cond => !cond.includes(`TACTIC ${tactic}`)).sort(() => 0.5 - Math.random());
+                            const selectedCat1 = shuffledCat1.slice(0, 2);
+
+                            // Select 0, 1, or 2 random lines from Category 2
+                            const numCat2 = Math.floor(Math.random() * 3); // 0, 1, or 2
+                            const shuffledCat2 = category2.sort(() => 0.5 - Math.random());
+                            const selectedCat2 = shuffledCat2.slice(0, numCat2);
+
+                            const randomConditionals = [...selectedCat1, ...selectedCat2].join('\n');
+                            finalConditionals = randomConditionals + (conditionalsText ? '\n' + conditionalsText : '');
+                        } else if (conditionalsChecked) {
+                            // Solo condicionales generados aleatoriamente
+                            const shuffledCat1 = category1.filter(cond => !cond.includes(`TACTIC ${tactic}`)).sort(() => 0.5 - Math.random());
+                            const selectedCat1 = shuffledCat1.slice(0, 2);
+
+                            const numCat2 = Math.floor(Math.random() * 3);
+                            const shuffledCat2 = category2.sort(() => 0.5 - Math.random());
+                            const selectedCat2 = shuffledCat2.slice(0, numCat2);
+
+                            finalConditionals = [...selectedCat1, ...selectedCat2].join('\n');
+                        } else if (conditionalsText) {
+                            // Solo condicionales importados
+                            finalConditionals = conditionalsText;
+                        }
+                        
+                        if (finalConditionals.trim()) {
+                            formattedLineup += `\n\n${finalConditionals}`;
+                        }
+                    }
+
+                    document.getElementById(`output${i}`).innerHTML =
+                        `<div class="font-mono text-sm whitespace-pre-wrap">${formattedLineup}</div>`;
+
+                    // Populate modification dropdowns (usar nombres originales)
+                    updatePlayerOut(i);
+                    updatePlayerIn(i, '');
+                    updatePenaltyTakers(i);
+                }
+
+                // Scroll to the lineups section
+                document.getElementById('lineups-section').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('lineups-section').classList.remove('hidden');
+            document.getElementById('unavailable-players').classList.remove('hidden');
+            document.getElementById('unavailable-players-content').innerHTML = '<div class="text-gray-500">No se pudo cargar la plantilla para verificar jugadores no disponibles.</div>';
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById(`output${i}`).innerHTML =
+                    `<div class="text-red-600 bg-red-50 p-4 rounded-md border border-red-200">${message}</div>`;
+                document.getElementById(`player-out-${i}`).innerHTML = '<option value="">Remplazar a...</option>';
+                document.getElementById(`player-in-${i}`).innerHTML = '<option value="">por...</option>';
+            }
+            document.getElementById('lineups-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function copyLineup(id, button) {
+            const text = document.getElementById(id).querySelector('.font-mono').innerText;
+            try {
+                await navigator.clipboard.writeText(text);
+                button.classList.add('action-animation');
+                setTimeout(() => {
+                    button.classList.remove('action-animation');
+                }, 400);
+                showToast('Alineación copiada al portapapeles', 'success');
+            } catch (err) {
+                showToast('Error al copiar al portapapeles', 'error');
+            }
+        }
+
+        function downloadLineup(id, filename, button) {
+            const text = document.getElementById(id).querySelector('.font-mono').innerText;
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename.replace('${abbreviation.toLowerCase()}', document.getElementById('abbreviation').value.toLowerCase()));
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+
+            document.body.removeChild(element);
+
+            button.classList.add('action-animation');
+            setTimeout(() => {
+                button.classList.remove('action-animation');
+            }, 400);
+            showToast('Alineación descargada', 'success');
+        }
+
+        function updatePlayerOut(index) {
+            const playerOutSelect = document.getElementById(`player-out-${index}`);
+            playerOutSelect.innerHTML = '<option value="">Remplazar a...</option>';
+
+            const lineup = lineups[index - 1];
+            const lineupPlayers = [
+                ...lineup.starters.gk.map(p => ({ ...p, position: 'GK', role: 'GK' })),
+                ...lineup.starters.df.map(p => ({ ...p, position: 'DF', role: 'DF' })),
+                ...lineup.starters.mf.map(p => ({ ...p, position: 'MF', role: p.role || 'MF' })),
+                ...lineup.starters.fw.map(p => ({ ...p, position: 'FW', role: 'FW' })),
+                ...lineup.subs.gk.map(p => ({ ...p, position: 'GK', role: 'GK' })),
+                ...lineup.subs.df.map(p => ({ ...p, position: 'DF', role: 'DF' })),
+                ...lineup.subs.mf.map(p => ({ ...p, position: 'MF', role: p.role || 'MF' })),
+                ...lineup.subs.fw.map(p => ({ ...p, position: 'FW', role: 'FW' }))
+            ];
+
+            const groups = { GK: [], DF: [], MF: [], FW: [] };
+
+            lineupPlayers.forEach(player => {
+                groups[player.position].push(player);
+            });
+
+            for (const groupName in groups) {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = groupName;
+                groups[groupName].forEach(player => {
+                    const option = document.createElement('option');
+                    option.value = `${player.name}|${player.position}|${player.role}`;
+                    option.text = `${player.name} (${player.fit}%)`; // Nombre original
+                    optgroup.appendChild(option);
+                });
+                playerOutSelect.appendChild(optgroup);
+                const separator = document.createElement('option');
+                separator.disabled = true;
+                separator.value = '';
+                separator.text = '';
+                playerOutSelect.appendChild(separator);
+            }
+        }
+
+        function updatePlayerIn(index, outName) {
+            const playerInSelect = document.getElementById(`player-in-${index}`);
+            playerInSelect.innerHTML = '<option value="">por...</option>';
+
+            const lineup = lineups[index - 1];
+            const lineupPlayers = [
+                ...lineup.starters.gk.map(p => ({ ...p, position: 'GK', role: 'GK' })),
+                ...lineup.starters.df.map(p => ({ ...p, position: 'DF', role: 'DF' })),
+                ...lineup.starters.mf.map(p => ({ ...p, position: 'MF', role: p.role || 'MF' })),
+                ...lineup.starters.fw.map(p => ({ ...p, position: 'FW', role: 'FW' })),
+                ...lineup.subs.gk.map(p => ({ ...p, position: 'GK', role: 'GK' })),
+                ...lineup.subs.df.map(p => ({ ...p, position: 'DF', role: 'DF' })),
+                ...lineup.subs.mf.map(p => ({ ...p, position: 'MF', role: p.role || 'MF' })),
+                ...lineup.subs.fw.map(p => ({ ...p, position: 'FW', role: 'FW' }))
+            ];
+
+            const groups = { GK: [], DF: [], MF: [], FW: [] };
+
+            // Include all players from the lineup (except the one being replaced)
+            lineupPlayers.forEach(player => {
+                if (player.name !== outName) {
+                    groups[player.position].push(player);
+                }
+            });
+
+            // Also include players not in the lineup
+            fullPlayers.forEach(player => {
+                const isInLineup = lineupPlayers.some(p => p.name === player.name);
+                if (!isInLineup && player.name !== outName) {
+                    const bestPosition = ['gk', 'df', 'mf', 'fw'].reduce((best, pos) =>
+                        player[pos] > player[best] ? pos : best, 'mf').toUpperCase();
+                    player.bestPosition = bestPosition;
+                    player.role = bestPosition === 'MF' ? (player.role || 'MF') : bestPosition;
+                    groups[bestPosition].push(player);
+                }
+            });
+
+            for (const groupName in groups) {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = groupName;
+                groups[groupName].forEach(player => {
+                    const option = document.createElement('option');
+                    option.value = `${player.name}|${player.position || player.bestPosition}|${player.role}`;
+                    option.text = `${player.name} (${player.fit}%)`; // Nombre original
+                    if (player.injured > 0 || player.suspended > 0) {
+                        let reason = '';
+                        if (player.injured > 0 && player.suspended > 0) {
+                            reason = 'Les. San.';
+                        } else if (player.injured > 0) {
+                            reason = 'Les.';
+                        } else if (player.suspended > 0) {
+                            reason = 'San.';
+                        }
+                        option.text += ` - ${reason}`;
+                        option.disabled = true;
+                        option.style.color = 'gray';
+                    }
+                    optgroup.appendChild(option);
+                });
+                playerInSelect.appendChild(optgroup);
+                const separator = document.createElement('option');
+                separator.disabled = true;
+                separator.value = '';
+                separator.text = '';
+                playerInSelect.appendChild(separator);
+            }
+        }
+
+        function updatePenaltyTakers(index) {
+            const penaltyTakerSelect = document.getElementById(`penalty-taker-${index}`);
+            penaltyTakerSelect.innerHTML = '<option value="">Seleccionar lanzador...</option>';
+
+            const lineup = lineups[index - 1];
+            const allStarters = [
+                ...lineup.starters.gk,
+                ...lineup.starters.df,
+                ...lineup.starters.mf,
+                ...lineup.starters.fw
+            ];
+
+            allStarters.forEach(player => {
+                const option = document.createElement('option');
+                option.value = player.name;
+                option.text = player.name; // Nombre original
+                penaltyTakerSelect.appendChild(option);
+            });
+        }
+
+        function changePenaltyTaker(index, playerName) {
+            if (!playerName) return;
+
+            const lineup = lineups[index - 1];
+            const abbreviation = document.getElementById('abbreviation').value.toUpperCase();
+            const tactic = lineups[index - 1].tactic;
+            const formation = lineups[index - 1].formation;
+            const aggressionValue = document.getElementById('aggression').checked ? document.getElementById('aggressionValue').value : null;
+
+            // Find the player in starters
+            const allStarters = [
+                ...lineup.starters.gk,
+                ...lineup.starters.df,
+                ...lineup.starters.mf,
+                ...lineup.starters.fw
+            ];
+            const newPenaltyTaker = allStarters.find(p => p.name === playerName);
+
+            if (!newPenaltyTaker) {
+                showToast('El lanzador de penaltis debe ser un jugador titular.', 'error');
+                return;
+            }
+
+            // Update the penalty taker
+            lineup.penaltyTaker = newPenaltyTaker;
+
+            // Format the lineup
+            let formattedLineup = formatLineup(abbreviation, lineup, tactic, aggressionValue, formation);
+
+            // Add substitutions if they exist
+            if (substitutionsText[index - 1]) {
+                formattedLineup += `\n\n${substitutionsText[index - 1]}`;
+            }
+
+            // Add conditionals if they exist
+            const conditionalsChecked = document.getElementById('conditionals').checked;
+            if (conditionalsChecked || conditionalsText) {
+                const originalOutput = document.getElementById(`output${index}`).querySelector('.font-mono').innerText;
+                const parts = originalOutput.split('\n\n');
+                if (parts.length > 1) {
+                    const conditionals = parts[parts.length - 1];
+                    formattedLineup += `\n\n${conditionals}`;
+                }
+            }
+
+            document.getElementById(`output${index}`).innerHTML =
+                `<div class="font-mono text-sm whitespace-pre-wrap">${formattedLineup}</div>`;
+
+            // Play confirmation sound
+            document.getElementById('confirmation-sound').play();
+
+            // Reset the select
+            document.getElementById(`penalty-taker-${index}`).value = "";
+            
+            showToast('Lanzador de penaltis actualizado', 'success');
+        }
+
+        function modifyLineup(index) {
+            const playerOutSelect = document.getElementById(`player-out-${index}`);
+            const playerInSelect = document.getElementById(`player-in-${index}`);
+            const playerOutValue = playerOutSelect.value;
+            const playerInValue = playerInSelect.value;
+
+            if (playerOutValue && !playerInValue) {
+                const outName = playerOutValue.split('|')[0];
+                updatePlayerIn(index, outName);
+                return;
+            }
+
+            if (!playerOutValue || !playerInValue) return;
+
+            const [outName, outPosition, outRole] = playerOutValue.split('|');
+            const [inName, inPosition, inRole] = playerInValue.split('|');
+
+            // Prevent swapping the same player
+            if (outName === inName) {
+                showToast('No puedes sustituir un jugador por sí mismo.', 'error');
+                playerOutSelect.value = '';
+                playerInSelect.value = '';
+                return;
+            }
+
+            // Clone the lineup to modify
+            const lineup = JSON.parse(JSON.stringify(lineups[index - 1]));
+            const abbreviation = document.getElementById('abbreviation').value.toUpperCase();
+            const tactic = lineups[index - 1].tactic;
+            const formation = lineups[index - 1].formation;
+            const aggressionValue = document.getElementById('aggression').checked ? document.getElementById('aggressionValue').value : null;
+
+            // Find the out player location
+            const sections = ['starters', 'subs'];
+            const positions = ['gk', 'df', 'mf', 'fw'];
+            let outSection, outPos, outIndex;
+            for (const section of sections) {
+                for (const pos of positions) {
+                    const players = lineup[section][pos];
+                    const playerIndex = players.findIndex(p => p.name === outName && (pos !== 'mf' || p.role === outRole));
+                    if (playerIndex !== -1) {
+                        outSection = section;
+                        outPos = pos;
+                        outIndex = playerIndex;
+                        break;
+                    }
+                }
+                if (outSection) break;
+            }
+
+            if (!outSection) return;
+
+            // Find if in player is already in the lineup
+            let inSection, inPos, inIndex;
+            for (const section of sections) {
+                for (const pos of positions) {
+                    const players = lineup[section][pos];
+                    const playerIndex = players.findIndex(p => p.name === inName && (pos !== 'mf' || p.role === inRole));
+                    if (playerIndex !== -1) {
+                        inSection = section;
+                        inPos = pos;
+                        inIndex = playerIndex;
+                        break;
+                    }
+                }
+                if (inSection) break;
+            }
+
+            if (inSection) {
+                // Swap players
+                const temp = lineup[outSection][outPos][outIndex];
+                lineup[outSection][outPos][outIndex] = lineup[inSection][inPos][inIndex];
+                lineup[inSection][inPos][inIndex] = temp;
+            } else {
+                // Replace with new player
+                const newPlayerData = fullPlayers.find(p => p.name === inName);
+                if (!newPlayerData) {
+                    showToast('Jugador no encontrado en la plantilla.', 'error');
+                    return;
+                }
+                const newRole = (outPos === 'mf') ? (inRole || 'MF') : outPos.toUpperCase();
+                lineup[outSection][outPos][outIndex] = {
+                    name: inName,
+                    role: newRole,
+                    fit: newPlayerData.fit,
+                    gk: newPlayerData.gk,
+                    df: newPlayerData.df,
+                    mf: newPlayerData.mf,
+                    fw: newPlayerData.fw
+                };
+            }
+
+            // Update penalty taker if necessary
+            if (lineup.penaltyTaker.name === outName) {
+                lineup.penaltyTaker = { 
+                    name: inName, 
+                    role: inRole || 'FW', 
+                    fit: fullPlayers.find(p => p.name === inName).fit 
+                };
+            }
+
+            // Format and display the updated lineup
+            let formattedLineup = formatLineup(abbreviation, lineup, tactic, aggressionValue, formation);
+
+            // Add substitutions if they exist
+            if (substitutionsText[index - 1]) {
+                formattedLineup += `\n\n${substitutionsText[index - 1]}`;
+            }
+
+            // Add conditionals if they exist
+            const conditionalsChecked = document.getElementById('conditionals').checked;
+            if (conditionalsChecked || conditionalsText) {
+                const originalOutput = document.getElementById(`output${index}`).querySelector('.font-mono').innerText;
+                const parts = originalOutput.split('\n\n');
+                if (parts.length > 1) {
+                    const conditionals = parts[parts.length - 1];
+                    formattedLineup += `\n\n${conditionals}`;
+                }
+            }
+
+            document.getElementById(`output${index}`).innerHTML =
+                `<div class="font-mono text-sm whitespace-pre-wrap">${formattedLineup}</div>`;
+
+            // Update stored lineup
+            lineups[index - 1] = lineup;
+
+            // Play confirmation sound
+            document.getElementById('confirmation-sound').play();
+
+            // Reset dropdowns
+            playerOutSelect.value = '';
+            playerInSelect.value = '';
+
+            // Repopulate dropdowns
+            updatePlayerOut(index);
+            updatePlayerIn(index, '');
+            updatePenaltyTakers(index);
+            
+            showToast('Alineación modificada correctamente', 'success');
+        }
+
+        function parseSquad(squadText, filterType = 'available') {
+            const lines = squadText.trim().split('\n')
+                .filter(line => line && !line.includes('Name') && !line.includes('---'));
+
+            const players = lines.map(line => {
+                const parts = line.trim().split(/\s+/);
+                if (parts.length < 27) {
+                    throw new Error('Formato de plantilla inválido');
+                }
+
+                return {
+                    name: parts[0],
+                    gk: parseInt(parts[3]),
+                    df: parseInt(parts[4]),
+                    mf: parseInt(parts[5]),
+                    fw: parseInt(parts[6]),
+                    injured: parseInt(parts[24]),
+                    suspended: parseInt(parts[25]),
+                    fit: parseInt(parts[26]),
+                    totalScore: parseInt(parts[3]) + parseInt(parts[4]) + parseInt(parts[5]) + parseInt(parts[6])
+                };
+            });
+
+            if (filterType === 'available') {
+                return players.filter(p => p.injured === 0 && p.suspended === 0);
+            } else if (filterType === 'unavailable') {
+                return players.filter(p => p.injured > 0 || p.suspended > 0);
+            } else if (filterType === 'all') {
+                return players;
+            }
+        }
+
+        function assignMidfieldRoles(players) {
+            const assignRole = (player) => {
+                if (player.mf < Math.max(player.gk, player.df, player.fw)) {
+                    return { ...player, role: 'MF' }; // Not a primary midfielder
+                }
+
+                const dfScore = player.df;
+                const fwScore = player.fw;
+                let role = 'MF';
+
+                const baseProbability = (score) => {
+                    if (score <= 5) return 0;
+                    return Math.min(0.95, 0.50 + (score - 6) * (0.45 / 9));
+                };
+
+                if (dfScore > fwScore && dfScore > 5) {
+                    const probDM = baseProbability(dfScore);
+                    if (Math.random() < probDM) {
+                        role = 'DM';
+                    }
+                } else if (fwScore > dfScore && fwScore > 5) {
+                    const probAM = baseProbability(fwScore);
+                    if (Math.random() < probAM) {
+                        role = 'AM';
+                    }
+                }
+
+                return { ...player, role };
+            };
+
+            return players.map(assignRole);
+        }
+
+        function createLineup(players, fitPriority, variation, formation, prioritizeSubs, mixStartersSubs, tactic) {
+            if (players.length < 16) {
+                throw new Error('No hay suficientes jugadores disponibles para generar una alineación');
+            }
+
+            const applyFitPriority = (sortedPlayers) => {
+                if (fitPriority) {
+                    const highFitPlayers = sortedPlayers.filter(p => p.fit > 90);
+                    const otherPlayers = sortedPlayers.filter(p => p.fit <= 90);
+
+                    if (highFitPlayers.length < 16) {
+                        return [...highFitPlayers, ...otherPlayers];
+                    } else {
+                        return highFitPlayers;
+                    }
+                }
+                return sortedPlayers;
+            };
+
+            const applyPrioritizeSubs = (sortedPlayers, position) => {
+                return sortedPlayers.filter(p => p[position] >= 15)
+                    .sort((a, b) => {
+                        return (a[position] - b[position]) || (b.fit - a.fit);
+                    });
+            };
+
+            const applyStarters = (sortedPlayers, position) => {
+                return sortedPlayers.sort((a, b) => b[position] - a[position] || b.variationScore - a.variationScore);
+            };
+
+            const addVariation = (players, variationNum) => {
+                return players.map(p => ({
+                    ...p,
+                    variationScore: p.totalScore + (Math.random() * (5 + variationNum * 2))
+                }));
+            };
+
+            const variatedPlayers = addVariation(players, variation);
+            const playersWithRoles = assignMidfieldRoles(variatedPlayers);
+            const sortedGK = applyFitPriority([...playersWithRoles]);
+            const sortedDF = applyFitPriority([...playersWithRoles]);
+            const sortedMF = applyFitPriority([...playersWithRoles]);
+            const sortedFW = applyFitPriority([...playersWithRoles]);
+
+            const lineup = {
+                starters: {
+                    gk: [],
+                    df: [],
+                    mf: [],
+                    fw: []
+                },
+                subs: {
+                    gk: [],
+                    df: [],
+                    mf: [],
+                    fw: []
+                },
+                tactic,
+                formation
+            };
+
+            const formationConfig = {
+                '4-4-2': { df: 4, mf: 4, fw: 2 },
+                '4-3-3': { df: 4, mf: 3, fw: 3 },
+                '4-5-1': { df: 4, mf: 5, fw: 1 },
+                '5-3-2': { df: 5, mf: 3, fw: 2 },
+                '3-4-3': { df: 3, mf: 4, fw: 3 },
+                '3-5-2': { df: 3, mf: 5, fw: 2 }
+            };
+
+            const { df: dfCount, mf: mfCount, fw: fwCount } = formationConfig[formation];
+
+            // Select players based on prioritizeSubs or mixStartersSubs
+            const selectPlayersForPosition = (sortedPlayers, position, count, usedPlayers) => {
+                const selected = [];
+                const usedNames = new Set(usedPlayers.map(p => p.name));
+
+                if (mixStartersSubs) {
+                    // Select approximately half substitutes and half starters
+                    const subCount = Math.ceil(count / 2);
+                    const starterCount = count - subCount;
+
+                    // Select substitutes (players with position score >= 15)
+                    let subs = applyPrioritizeSubs([...sortedPlayers], position);
+                    subs = subs.filter(p => !usedNames.has(p.name));
+                    for (let i = 0; i < Math.min(subCount, subs.length); i++) {
+                        selected.push(subs[i]);
+                        usedNames.add(subs[i].name);
+                    }
+
+                    // Select starters (highest position score)
+                    let starters = applyStarters([...sortedPlayers], position);
+                    starters = starters.filter(p => !usedNames.has(p.name));
+                    for (let i = 0; i < Math.min(starterCount, starters.length); i++) {
+                        selected.push(starters[i]);
+                        usedNames.add(starters[i].name);
+                    }
+                } else if (prioritizeSubs) {
+                    // Select only substitutes (players with position score >= 15)
+                    let subs = applyPrioritizeSubs([...sortedPlayers], position);
+                    subs = subs.filter(p => !usedNames.has(p.name));
+                    for (let i = 0; i < Math.min(count, subs.length); i++) {
+                        selected.push(subs[i]);
+                        usedNames.add(subs[i].name);
+                    }
+                } else {
+                    // Select starters (highest position score)
+                    let starters = applyStarters([...sortedPlayers], position);
+                    starters = starters.filter(p => !usedNames.has(p.name));
+                    for (let i = 0; i < Math.min(count, starters.length); i++) {
+                        selected.push(starters[i]);
+                        usedNames.add(starters[i].name);
+                    }
+                }
+
+                if (selected.length < count) {
+                    // Fallback to remaining players if not enough
+                    const remaining = sortedPlayers.filter(p => !usedNames.has(p.name));
+                    for (let i = 0; i < Math.min(count - selected.length, remaining.length); i++) {
+                        selected.push(remaining[i]);
+                        usedNames.add(remaining[i].name);
+                    }
+                }
+
+                if (selected.length < count) {
+                    throw new Error('No hay suficientes jugadores disponibles para generar una alineación');
+                }
+
+                return selected;
+            };
+
+            lineup.starters.gk.push(selectPlayersForPosition(sortedGK, 'gk', 1, [])[0]);
+            lineup.starters.df = selectPlayersForPosition(sortedDF, 'df', dfCount, lineup.starters.gk);
+
+            // Handle midfielders with DM/AM roles, ensuring max 2 DMs, max 2 AMs, and min 2 MFs
+            const midfielders = selectPlayersForPosition(sortedMF, 'mf', mfCount, [...lineup.starters.gk, ...lineup.starters.df]);
+            const dmCandidates = midfielders.filter(p => p.role === 'DM').sort((a, b) => b.df - a.df);
+            const amCandidates = midfielders.filter(p => p.role === 'AM').sort((a, b) => b.fw - a.fw);
+            const mfCandidates = midfielders.filter(p => p.role === 'MF').sort((a, b) => b.mf - a.mf);
+
+            const dmCount = Math.min(dmCandidates.length, 2);
+            const amCount = Math.min(amCandidates.length, 2);
+            const minMFCount = Math.max(2, mfCount - dmCount - amCount); // Ensure at least 2 MFs
+            const availableMFCount = mfCandidates.length;
+
+            if (availableMFCount < minMFCount) {
+                // If not enough MFs, reassign some DMs/AMs to MF
+                const neededMFs = minMFCount - availableMFCount;
+                const extraDMs = dmCandidates.slice(dmCount);
+                const extraAMs = amCandidates.slice(amCount);
+                const reassignable = [...extraDMs, ...extraAMs].sort((a, b) => b.mf - a.mf);
+                const reassignedMFs = reassignable.slice(0, neededMFs).map(p => ({ ...p, role: 'MF' }));
+                lineup.starters.mf = [
+                    ...dmCandidates.slice(0, dmCount),
+                    ...mfCandidates,
+                    ...reassignedMFs,
+                    ...amCandidates.slice(0, amCount)
+                ].slice(0, mfCount);
+            } else {
+                lineup.starters.mf = [
+                    ...dmCandidates.slice(0, dmCount),
+                    ...mfCandidates.slice(0, Math.min(mfCandidates.length, minMFCount)),
+                    ...amCandidates.slice(0, amCount)
+                ].slice(0, mfCount);
+            }
+
+            lineup.starters.fw = selectPlayersForPosition(sortedFW, 'fw', fwCount, [...lineup.starters.gk, ...lineup.starters.df, ...lineup.starters.mf]);
+
+            const usedPlayers = [...lineup.starters.gk, ...lineup.starters.df, ...lineup.starters.mf, ...lineup.starters.fw];
+            lineup.subs.gk.push(selectPlayersForPosition(sortedGK, 'gk', 1, usedPlayers)[0]);
+            lineup.subs.df = selectPlayersForPosition(sortedDF, 'df', 2, [...usedPlayers, ...lineup.subs.gk]);
+            lineup.subs.mf = selectPlayersForPosition(sortedMF, 'mf', 1, [...usedPlayers, ...lineup.subs.gk, ...lineup.subs.df]);
+            lineup.subs.fw = selectPlayersForPosition(sortedFW, 'fw', 1, [...usedPlayers, ...lineup.subs.gk, ...lineup.subs.df, ...lineup.subs.mf]);
+
+            if (variation > 1) {
+                for (let position of ['df', 'mf', 'fw']) {
+                    if (lineup.starters[position].length > 1 && lineup.subs[position].length > 0) {
+                        let indexToSwap = Math.floor(Math.random() * lineup.starters[position].length);
+                        let swappedPlayer = lineup.starters[position].splice(indexToSwap, 1, lineup.subs[position].shift())[0];
+                        lineup.subs[position].push(swappedPlayer);
+                    }
+                }
+            }
+
+            const penaltyTaker = [...lineup.starters.fw, ...lineup.starters.mf]
+                .sort((a, b) => b.fw - a.fw || b.mf - a.mf)[0];
+
+            return {
+                starters: lineup.starters,
+                subs: lineup.subs,
+                penaltyTaker,
+                tactic,
+                formation
+            };
+        }
+
+        function formatLineup(abbreviation, lineup, tactic, aggressionValue, formation) {
+            const formatSection = (players, position) => {
+                if (position === 'mf') {
+                    // Sort midfielders: DM first, then MF, then AM
+                    const sortedMF = [
+                        ...players[position].filter(p => p.role === 'DM'),
+                        ...players[position].filter(p => p.role === 'MF'),
+                        ...players[position].filter(p => p.role === 'AM')
+                    ];
+                    return sortedMF.map(player => {
+                        const role = player.role || 'MF';
+                        return `${role} ${player.name}`; // Nombre original
+                    }).join('\n');
+                }
+                return players[position].map(player => {
+                    const role = position.toUpperCase();
+                    return `${role} ${player.name}`; // Nombre original
+                }).join('\n');
+            };
+
+            let formatted = `${abbreviation}\n${tactic}\n\n`;
+
+            formatted += `${formatSection(lineup.starters, 'gk')}\n${formatSection(lineup.starters, 'df')}\n${formatSection(lineup.starters, 'mf')}\n${formatSection(lineup.starters, 'fw')}\n\n`;
+            formatted += `${formatSection(lineup.subs, 'gk')}\n${formatSection(lineup.subs, 'df')}\n${formatSection(lineup.subs, 'mf')}\n${formatSection(lineup.subs, 'fw')}\n\nPK: ${lineup.penaltyTaker.name}`;
+
+            if (aggressionValue !== null) {
+                formatted += `\nAGG ${aggressionValue}`;
+            }
+
+            return formatted;
+        }
+    </script>
+</body>
+</html>
