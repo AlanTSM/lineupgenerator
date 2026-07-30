@@ -1205,7 +1205,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="team-info">
+                    <div class="team-info" id="team-info-container">
                         <img id="modalBadge" src="" alt="Escudo del equipo" class="team-badge" />
                         <h3 id="modalTeamName" class="team-name"></h3>
                     </div>
@@ -1333,44 +1333,44 @@
                                 <select id="teamDropdown" class="input-field select-field mr-2" style="max-width: 280px;">
                                     <option value="">Seleccionar plantilla de Dropbox</option>
                                     <optgroup label="Europa">
-                                        <option value="https://www.dropbox.com/scl/fi/9njb84ywzym3hhx5i2lg5/ajx.txt?rlkey=jhym2pqc9m60sioha0mmcil0o&e=1&dl=1">Ajax</option>
-                                        <option value="https://www.dropbox.com/scl/fi/wb6juf6y612xx28zrvu26/ars.txt?rlkey=6qe12dx31wj93kphgz5dh6qlz&e=1&dl=1">Arsenal</option>
-                                        <option value="https://www.dropbox.com/scl/fi/ucubvl04pfvqkev518dyo/asv.txt?rlkey=ubr83xqdq2v5r2g9twadabnib&e=1&st=com1va32&dl=1">Aston Villa</option>
-                                        <option value="https://www.dropbox.com/scl/fi/9w70qz8otcgwf57h25y07/ata.txt?rlkey=ussk413mrxz8iwe4d9tg7ls9i&e=1&st=u4t1vyqv&dl=1">Atalanta</option>
-                                        <option value="https://www.dropbox.com/scl/fi/tuhsywhyfywslnig6j5ar/atm.txt?rlkey=wg64adwz2y5eurb20m20201kr&e=1&dl=1">Atlético de Madrid</option>
-                                        <option value="https://www.dropbox.com/scl/fi/b2a0fyv07x3esuxpr1280/fcb.txt?rlkey=gjc2quuw368lwzf091a4tf89t&e=1&dl=1">Barcelona</option>
-                                        <option value="https://www.dropbox.com/scl/fi/egj2qgnrkjtt7jlxuhrx0/ble.txt?rlkey=9qodoqwtvzaklfh2t96rykp9i&e=1&st=2jg7bb7k&dl=1">Bayer Leverkusen</option>
-                                        <option value="https://www.dropbox.com/scl/fi/bq95u9q42jdhd156bw2dk/bay.txt?rlkey=9h8b1beoe8dimr9ryk1rd1mva&e=1&dl=1">Bayern de Múnich</option>
-                                        <option value="https://www.dropbox.com/scl/fi/6olskieubqse5hr31t6sz/bdo.txt?rlkey=wdgovvbf2npezjgjjul1101kt&e=1&dl=1">Borussia Dortmund</option>
-                                        <option value="https://www.dropbox.com/scl/fi/vaib05ni6t82hyrt5rg9v/che.txt?rlkey=fiv3v4p18gh9vc0ztma3v8pnv&e=1&dl=1">Chelsea</option>
-                                        <option value="https://www.dropbox.com/scl/fi/6hxb2kmntadzmqcm14zg9/int.txt?rlkey=y0gisxpu2fnixut8h3haxcydc&e=1&dl=1">Inter de Milán</option>
-                                        <option value="https://www.dropbox.com/scl/fi/x9ysiu5eyrpkdaf1pfjpe/juv.txt?rlkey=jxocqh225uco9o2lx54mvtz61&e=1&dl=1">Juventus</option>
-                                        <option value="https://www.dropbox.com/scl/fi/hz76l1lkyqvuuns4hrreo/liv.txt?rlkey=3afux4q929md83z041di2coxe&e=1&dl=1">Liverpool</option>
-                                        <option value="https://www.dropbox.com/scl/fi/wcq9i1o9bxppwbyu3ggv4/mci.txt?rlkey=kwxrxndbhcxisdf5339ldef1k&e=1&dl=1">Manchester City</option>
-                                        <option value="https://www.dropbox.com/scl/fi/2j17u24ig5s5hzbvg0zkp/man.txt?rlkey=9cs3sj1debd0cbw3mxkizrzfz&e=1&dl=1">Manchester United</option>
-                                        <option value="https://www.dropbox.com/scl/fi/klb7hcy0epivuvkmio8o2/mil.txt?rlkey=7plny75gkdl22tkkg8wkvmo1s&e=1&dl=1">Milan</option>
-                                        <option value="https://www.dropbox.com/scl/fi/zpou5oz6iv51u21helwdg/nap.txt?rlkey=gjekp32w79pxwtegk1s3oei06&e=1&dl=1">Nápoles</option>
-                                        <option value="https://www.dropbox.com/scl/fi/46m0eyfru9g97ch8c4ryy/new.txt?rlkey=zbbt3pe37i2bocxh946sz1axf&e=1&st=bk9c4sji&dl=1">Newcastle United</option>
-                                        <option value="https://www.dropbox.com/scl/fi/k2f61aq73xmm9eknqc0pm/psg.txt?rlkey=syd3nsi8zj826ysxx70ldtbur&e=1&dl=1">PSG</option>
-                                        <option value="https://www.dropbox.com/scl/fi/8ick97tco5apa2rgg01uv/rbl.txt?rlkey=kn17krqcqhyefeydngn2c3yqj&e=1&dl=1">RB Leipzig</option>
-                                        <option value="https://www.dropbox.com/scl/fi/2xida739oitrf4gilso4v/rma.txt?rlkey=ybjbuajy747quooqkzt5rsai3&e=1&dl=1">Real Madrid</option>
-                                        <option value="https://www.dropbox.com/scl/fi/n64w9h04e2f8h0tflt1kg/sev.txt?rlkey=z72w5eyq9vacdgr8655yzmthq&e=1&dl=1">Sevilla</option>
-                                        <option value="https://www.dropbox.com/scl/fi/ldj3rdbrip4466xdvu54e/tot.txt?rlkey=fpj5emqz2bwxue6si2p5slkci&e=1&dl=1">Tottenham Hotspur</option>
-                                        <option value="https://www.dropbox.com/scl/fi/bo2rw6u9sndoel5hzfcmn/vil.txt?rlkey=kz37s2mwg71cgls3903skid2p&e=1&dl=1">Villarreal</option>
+                                        <option value="https://www.dropbox.com/scl/fi/9njb84ywzym3hhx5i2lg5/ajx.txt?rlkey=jhym2pqc9m60sioha0mmcil0o&e=1&dl=0">Ajax</option>
+                                        <option value="https://www.dropbox.com/scl/fi/wb6juf6y612xx28zrvu26/ars.txt?rlkey=6qe12dx31wj93kphgz5dh6qlz&e=1&dl=0">Arsenal</option>
+                                        <option value="https://www.dropbox.com/scl/fi/ucubvl04pfvqkev518dyo/asv.txt?rlkey=ubr83xqdq2v5r2g9twadabnib&e=1&st=com1va32&dl=0">Aston Villa</option>
+                                        <option value="https://www.dropbox.com/scl/fi/9w70qz8otcgwf57h25y07/ata.txt?rlkey=ussk413mrxz8iwe4d9tg7ls9i&e=1&st=u4t1vyqv&dl=0">Atalanta</option>
+                                        <option value="https://www.dropbox.com/scl/fi/tuhsywhyfywslnig6j5ar/atm.txt?rlkey=wg64adwz2y5eurb20m20201kr&e=1&dl=0">Atlético de Madrid</option>
+                                        <option value="https://www.dropbox.com/scl/fi/b2a0fyv07x3esuxpr1280/fcb.txt?rlkey=gjc2quuw368lwzf091a4tf89t&e=1&dl=0">Barcelona</option>
+                                        <option value="https://www.dropbox.com/scl/fi/egj2qgnrkjtt7jlxuhrx0/ble.txt?rlkey=9qodoqwtvzaklfh2t96rykp9i&st=2jg7bb7k&e=1&dl=0">Bayer Leverkusen</option>
+                                        <option value="https://www.dropbox.com/scl/fi/bq95u9q42jdhd156bw2dk/bay.txt?rlkey=9h8b1beoe8dimr9ryk1rd1mva&e=1&dl=0">Bayern de Múnich</option>
+                                        <option value="https://www.dropbox.com/scl/fi/6olskieubqse5hr31t6sz/bdo.txt?rlkey=wdgovvbf2npezjgjjul1101kt&e=1&dl=0">Borussia Dortmund</option>
+                                        <option value="https://www.dropbox.com/scl/fi/vaib05ni6t82hyrt5rg9v/che.txt?rlkey=fiv3v4p18gh9vc0ztma3v8pnv&e=1&dl=0">Chelsea</option>
+                                        <option value="https://www.dropbox.com/scl/fi/6hxb2kmntadzmqcm14zg9/int.txt?rlkey=y0gisxpu2fnixut8h3haxcydc&e=1&dl=0">Inter de Milán</option>
+                                        <option value="https://www.dropbox.com/scl/fi/x9ysiu5eyrpkdaf1pfjpe/juv.txt?rlkey=jxocqh225uco9o2lx54mvtz61&e=1&dl=0">Juventus</option>
+                                        <option value="https://www.dropbox.com/scl/fi/hz76l1lkyqvuuns4hrreo/liv.txt?rlkey=3afux4q929md83z041di2coxe&e=1&dl=0">Liverpool</option>
+                                        <option value="https://www.dropbox.com/scl/fi/wcq9i1o9bxppwbyu3ggv4/mci.txt?rlkey=kwxrxndbhcxisdf5339ldef1k&e=1&dl=0">Manchester City</option>
+                                        <option value="https://www.dropbox.com/scl/fi/2j17u24ig5s5hzbvg0zkp/man.txt?rlkey=9cs3sj1debd0cbw3mxkizrzfz&e=1&dl=0">Manchester United</option>
+                                        <option value="https://www.dropbox.com/scl/fi/klb7hcy0epivuvkmio8o2/mil.txt?rlkey=7plny75gkdl22tkkg8wkvmo1s&e=1&dl=0">Milan</option>
+                                        <option value="https://www.dropbox.com/scl/fi/zpou5oz6iv51u21helwdg/nap.txt?rlkey=gjekp32w79pxwtegk1s3oei06&e=1&dl=0">Nápoles</option>
+                                        <option value="https://www.dropbox.com/scl/fi/46m0eyfru9g97ch8c4ryy/new.txt?rlkey=zbbt3pe37i2bocxh946sz1axf&e=1&st=bk9c4sji&dl=0">Newcastle United</option>
+                                        <option value="https://www.dropbox.com/scl/fi/k2f61aq73xmm9eknqc0pm/psg.txt?rlkey=syd3nsi8zj826ysxx70ldtbur&e=1&dl=0">PSG</option>
+                                        <option value="https://www.dropbox.com/scl/fi/8ick97tco5apa2rgg01uv/rbl.txt?rlkey=kn17krqcqhyefeydngn2c3yqj&e=1&dl=0">RB Leipzig</option>
+                                        <option value="https://www.dropbox.com/scl/fi/2xida739oitrf4gilso4v/rma.txt?rlkey=ybjbuajy747quooqkzt5rsai3&e=1&dl=0">Real Madrid</option>
+                                        <option value="https://www.dropbox.com/scl/fi/n64w9h04e2f8h0tflt1kg/sev.txt?rlkey=z72w5eyq9vacdgr8655yzmthq&e=1&dl=0">Sevilla</option>
+                                        <option value="https://www.dropbox.com/scl/fi/ldj3rdbrip4466xdvu54e/tot.txt?rlkey=fpj5emqz2bwxue6si2p5slkci&e=1&dl=0">Tottenham Hotspur</option>
+                                        <option value="https://www.dropbox.com/scl/fi/bo2rw6u9sndoel5hzfcmn/vil.txt?rlkey=kz37s2mwg71cgls3903skid2p&e=1&dl=0">Villarreal</option>
                                     </optgroup>
                                     <optgroup label="América">
-                                        <option value="https://www.dropbox.com/scl/fi/ztjlxjhzyvp8lcks1pwci/boc.txt?rlkey=qirdttv85ok9baw8xptcnsunz&e=1&st=x5a20e34&dl=1">Boca Juniors</option>
-                                        <option value="https://www.dropbox.com/scl/fi/chl8e22zvwt1tdbdw6ibf/ame.txt?rlkey=wj7s2h8hhl10r9xwie185scg7&st=srb3u6yw&dl=1">Club América</option>
-                                        <option value="https://www.dropbox.com/scl/fi/e487hkxngpg7figj4oq8w/cor.txt?rlkey=460krir84si5gxitykoixnkq&st=ghpgy930&dl=1">Corinthians</option>
-                                        <option value="https://www.dropbox.com/scl/fi/6riipg98tgpsz85dhgoz0/fla.txt?rlkey=w0h7ths73fjyi2l55bk1sxrvf&st=tqx52qce&dl=1">Flamengo</option>
-                                        <option value="https://www.dropbox.com/scl/fi/egmmh5aeoedbt789jffpk/mia.txt?rlkey=xnkhye50v5qosnv9058x06l2y&st=fhchguw1&dl=1">Inter Miami</option>
-                                        <option value="https://www.dropbox.com/scl/fi/u486w1ja3szh5c962vggd/gxy.txt?rlkey=gc4dwwjjiblcpqm6shvpeo2he&st=kbtfyswi&dl=1">Los Angeles Galaxy</option>
-                                        <option value="https://www.dropbox.com/scl/fi/sqm4m05g62wdw41lf15ha/nac.txt?rlkey=uphyfk82isuapippyhvnd3ri7&st=3fh096vc&dl=1">Nacional</option>
-                                        <option value="https://www.dropbox.com/scl/fi/dyjigos9mm1d0aiqdh5gc/pal.txt?rlkey=4laqdf9oricp4wlpagtj29b7m&st=pob7jib0&dl=1">Palmeiras</option>
-                                        <option value="https://www.dropbox.com/scl/fi/jpktxsf5vskrx4zok4d0d/pen.txt?rlkey=zpquq9zpipq7672cfnickotlt&st=oa4zieg3&dl=1">Peñarol</option>
-                                        <option value="https://www.dropbox.com/scl/fi/2iwqtr4l06nb78eplyts5/rac.txt?rlkey=us90cnxa1x2slfhgp8ttp7wkl&st=52xtotxn&dl=1">Racing Club</option>
-                                        <option value="https://www.dropbox.com/scl/fi/veyikysz0q9firvef1xfv/riv.txt?rlkey=9iar3rbxa63n2yl0n907p5j0n&st=fwktlehd&dl=1">River Plate</option>
-                                        <option value="https://www.dropbox.com/scl/fi/veyikysz0q9firvef1xfv/riv.txt?rlkey=9iar3rbxa63n2yl0n907p5j0n&st=fwktlehd&dl=1">Universidad Católica</option>
+                                        <option value="https://www.dropbox.com/scl/fi/ztjlxjhzyvp8lcks1pwci/boc.txt?rlkey=qirdttv85ok9baw8xptcnsunz&e=1&st=x5a20e34&dl=0">Boca Juniors</option>
+                                        <option value="https://www.dropbox.com/scl/fi/chl8e22zvwt1tdbdw6ibf/ame.txt?rlkey=wj7s2h8hhl10r9xwie185scg7&st=srb3u6yw&dl=0">Club América</option>
+                                        <option value="https://www.dropbox.com/scl/fi/e487hkxngpg7figj4oq8w/cor.txt?rlkey=460krir84si5gxitykoixnkq&st=ghpgy930&dl=0">Corinthians</option>
+                                        <option value="https://www.dropbox.com/scl/fi/6riipg98tgpsz85dhgoz0/fla.txt?rlkey=w0h7ths73fjyi2l55bk1sxrvf&st=tqx52qce&dl=0">Flamengo</option>
+                                        <option value="https://www.dropbox.com/scl/fi/egmmh5aeoedbt789jffpk/mia.txt?rlkey=xnkhye50v5qosnv9058x06l2y&st=fhchguw1&dl=0">Inter Miami</option>
+                                        <option value="https://www.dropbox.com/scl/fi/u486w1ja3szh5c962vggd/gxy.txt?rlkey=gc4dwwjjiblcpqm6shvpeo2he&st=kbtfyswi&dl=0">Los Angeles Galaxy</option>
+                                        <option value="https://www.dropbox.com/scl/fi/sqm4m05g62wdw41lf15ha/nac.txt?rlkey=uphyfk82isuapippyhvnd3ri7&st=3fh096vc&dl=0">Nacional</option>
+                                        <option value="https://www.dropbox.com/scl/fi/dyjigos9mm1d0aiqdh5gc/pal.txt?rlkey=4laqdf9oricp4wlpagtj29b7m&st=pob7jib0&dl=0">Palmeiras</option>
+                                        <option value="https://www.dropbox.com/scl/fi/jpktxsf5vskrx4zok4d0d/pen.txt?rlkey=zpquq9zpipq7672cfnickotlt&st=oa4zieg3&dl=0">Peñarol</option>
+                                        <option value="https://www.dropbox.com/scl/fi/2iwqtr4l06nb78eplyts5/rac.txt?rlkey=us90cnxa1x2slfhgp8ttp7wkl&st=52xtotxn&dl=0">Racing Club</option>
+                                        <option value="https://www.dropbox.com/scl/fi/veyikysz0q9firvef1xfv/riv.txt?rlkey=9iar3rbxa63n2yl0n907p5j0n&st=fwktlehd&dl=0">River Plate</option>
+                                        <option value="https://www.dropbox.com/scl/fi/veyikysz0q9firvef1xfv/riv.txt?rlkey=9iar3rbxa63n2yl0n907p5j0n&st=fwktlehd&dl=0">Universidad Católica</option>
                                     </optgroup>
                                 </select>
 
@@ -1661,11 +1661,20 @@
             }
 
             const teamDropdown = document.getElementById('teamDropdown');
-            const selectedTeam = teamDropdown.options[teamDropdown.selectedIndex].text;
+            const selectedOption = teamDropdown.options[teamDropdown.selectedIndex];
+            const selectedTeam = selectedOption ? selectedOption.text : '';
 
-            document.getElementById('modalTeamName').textContent = selectedTeam;
-
-            fetchTeamBadge(selectedTeam);
+            const teamInfoContainer = document.getElementById('team-info-container');
+            
+            if (selectedTeam && selectedTeam !== 'Seleccionar plantilla de Dropbox') {
+                document.getElementById('modalTeamName').textContent = selectedTeam;
+                teamInfoContainer.style.display = 'flex';
+                fetchTeamBadge(selectedTeam);
+            } else {
+                document.getElementById('modalTeamName').textContent = 'Plantilla cargada';
+                document.getElementById('modalBadge').style.display = 'none';
+                teamInfoContainer.style.display = 'flex';
+            }
 
             displayFormattedSquad(squadText);
 
@@ -1734,10 +1743,12 @@
                 }
 
                 document.getElementById('modalBadge').src = badgeUrl;
+                document.getElementById('modalBadge').style.display = 'block';
             } catch (error) {
                 console.error('Error al cargar el escudo:', error);
                 document.getElementById('modalBadge').src = 'https://via.placeholder.com/96x64/3B82F6/FFFFFF?text=' + teamName
                     .charAt(0);
+                document.getElementById('modalBadge').style.display = 'block';
             }
         }
 
@@ -2004,23 +2015,11 @@
             }
         });
 
-        document.getElementById('teamDropdown').addEventListener('change', async function() {
+        document.getElementById('teamDropdown').addEventListener('change', function() {
             const url = this.value;
             if (!url) return;
-
-            const squadLoading = document.getElementById('squadLoading');
-            squadLoading.classList.add('active');
-            this.disabled = true;
-
-            try {
-                await loadFromDropbox(url);
-                showToast('Plantilla cargada correctamente', 'success');
-            } catch (error) {
-                showToast(`Error al cargar la plantilla: ${error.message}`, 'error');
-            } finally {
-                squadLoading.classList.remove('active');
-                this.disabled = false;
-            }
+            window.open(url, '_blank');
+            this.value = '';
         });
 
         let allPlayers = [];
@@ -2105,70 +2104,6 @@
             document.getElementById('squad').value = '';
             document.getElementById('teamDropdown').value = '';
             showToast('Plantilla eliminada', 'success');
-        }
-
-        async function loadFromDropbox(url) {
-            try {
-                const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
-                const response = await fetch(proxyUrl);
-
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status}`);
-                }
-
-                const text = await response.text();
-                document.getElementById('squad').value = text;
-
-                const teamDropdown = document.getElementById('teamDropdown');
-                const selectedTeam = teamDropdown.options[teamDropdown.selectedIndex].text;
-                const teamAbbrMap = {
-                    'Ajax': 'AJX',
-                    'Arsenal': 'ARS',
-                    'Aston Villa': 'ASV',
-                    'Atalanta': 'ATA',
-                    'Atlético de Madrid': 'ATM',
-                    'Barcelona': 'FCB',
-                    'Bayer Leverkusen': 'BLE',
-                    'Bayern de Múnich': 'BAY',
-                    'Borussia Dortmund': 'BDO',
-                    'Chelsea': 'CHE',
-                    'Inter de Milán': 'INT',
-                    'Juventus': 'JUV',
-                    'Liverpool': 'LIV',
-                    'Manchester City': 'MCI',
-                    'Manchester United': 'MAN',
-                    'Milan': 'MIL',
-                    'Nápoles': 'NAP',
-                    'Newcastle United': 'NEW',
-                    'PSG': 'PSG',
-                    'RB Leipzig': 'RBL',
-                    'Real Madrid': 'RMA',
-                    'Sevilla': 'SEV',
-                    'Tottenham Hotspur': 'TOT',
-                    'Villarreal': 'VIL',
-                    'Boca Juniors': 'BOC',
-                    'Club América': 'AME',
-                    'Corinthians': 'COR',
-                    'Flamengo': 'FLA',
-                    'Inter Miami': 'MIA',
-                    'Los Angeles Galaxy': 'GXY',
-                    'Nacional': 'NAC',
-                    'Palmeiras': 'PAL',
-                    'Peñarol': 'PEN',
-                    'Racing Club': 'RAC',
-                    'River Plate': 'RIV',
-                    'Universidad Católica': 'UCA'
-                };
-
-                if (teamAbbrMap[selectedTeam]) {
-                    document.getElementById('abbreviation').value = teamAbbrMap[selectedTeam];
-                }
-
-            } catch (error) {
-                showToast(`Error al cargar desde Dropbox: ${error.message}`, 'error');
-                console.error('Error:', error);
-                throw error;
-            }
         }
 
         function validateAbbreviation() {
