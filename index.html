@@ -1157,6 +1157,85 @@
             width: 16px;
             height: 16px;
         }
+
+        /* ===== Modo masivo ===== */
+        .massive-dropzone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.75rem;
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #f8fafc;
+            color: var(--gray);
+        }
+
+        .massive-dropzone:hover,
+        .massive-dropzone.dragover {
+            border-color: var(--primary-light);
+            background-color: #ebf5ff;
+            color: var(--primary);
+        }
+
+        .dark-mode .massive-dropzone {
+            background-color: #2d3748;
+            border-color: #4a5568;
+            color: #a0aec0;
+        }
+
+        .dark-mode .massive-dropzone:hover,
+        .dark-mode .massive-dropzone.dragover {
+            border-color: #63b3ed;
+            background-color: #374151;
+            color: #63b3ed;
+        }
+
+        .massive-dropzone i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .massive-file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            background-color: #f1f5f9;
+            margin-bottom: 0.5rem;
+            font-size: 0.8125rem;
+            color: var(--dark);
+        }
+
+        .dark-mode .massive-file-item {
+            background-color: #4a5568;
+            color: #e2e8f0;
+        }
+
+        .massive-file-item button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--error);
+            transition: transform 0.2s ease;
+        }
+
+        .massive-file-item button:hover {
+            transform: scale(1.15);
+        }
+
+        .massive-results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .massive-lineup-content {
+            max-height: 340px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
     </style>
 </head>
 <body>
@@ -1210,6 +1289,115 @@
                         <h3 id="modalTeamName" class="team-name"></h3>
                     </div>
                     <div id="modalSquadContent" class="overflow-x-auto">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="massiveModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="text-xl font-bold">Modo masivo</h2>
+                    <button id="closeMassiveModal" class="text-gray-500 hover:text-gray-700 text-xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-6">
+                        <label class="input-label font-bold">Plantillas</label>
+                        <div id="massiveDropzone" class="massive-dropzone">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p class="font-semibold">Haz clic o arrastra aquí tus archivos .txt</p>
+                            <p class="text-xs mt-1">Puedes cargar tantas plantillas como quieras. La abreviación se toma del nombre del archivo (ej: fcb.txt &rarr; FCB).</p>
+                        </div>
+                        <input type="file" id="massiveFileInput" accept=".txt" multiple class="file-input-hidden" />
+                        <div id="massiveFileList" class="mt-3"></div>
+                        <div id="massiveFileActions" class="mt-2 hidden">
+                            <button class="btn btn-danger btn-sm" onclick="clearMassiveFiles()">
+                                <i class="fas fa-trash-alt"></i> Eliminar todas
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="input-label font-bold">Configurar alineaciones (opcional)</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                            <div class="input-group">
+                                <label class="input-label" for="massiveFormation">Formación</label>
+                                <select id="massiveFormation" class="input-field select-field">
+                                    <option value="Aleatoria">Aleatoria</option>
+                                    <option value="4-4-2">4-4-2</option>
+                                    <option value="4-3-3">4-3-3</option>
+                                    <option value="4-5-1">4-5-1</option>
+                                    <option value="5-3-2">5-3-2</option>
+                                    <option value="3-4-3">3-4-3</option>
+                                    <option value="3-5-2">3-5-2</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label" for="massiveTactic">Táctica</label>
+                                <select id="massiveTactic" class="input-field select-field">
+                                    <option value="Aleatoria">Aleatoria</option>
+                                    <option value="A">A (Atacante)</option>
+                                    <option value="C">C (Contragolpe)</option>
+                                    <option value="D">D (Defensiva)</option>
+                                    <option value="E">E (Europea)</option>
+                                    <option value="L">L (Balones largos)</option>
+                                    <option value="N">N (Equilibrada)</option>
+                                    <option value="P">P (Pases cortos)</option>
+                                    <option value="T">T (Temeraria)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="massiveFitPriority" class="checkbox-field" />
+                                    <span>Solo jugadores con Fit > 90</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="massiveSubstitutions" class="checkbox-field" />
+                                    <span>Sustituciones básicas</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="massivePrioritizeSubs" class="checkbox-field" />
+                                    <span>Priorizar suplentes</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="massiveConditionals" class="checkbox-field" />
+                                    <span>Condicionales</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="massiveMixStartersSubs" class="checkbox-field" />
+                                    <span>Combinar titulares con suplentes</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="massiveAggression" class="checkbox-field" />
+                                    <span>Agresividad</span>
+                                </label>
+                            </div>
+
+                            <div id="massiveAggressionSlider" class="range-container mt-2 hidden">
+                                <input id="massiveAggressionValue" class="range-field" type="range" min="1" max="20" value="10" />
+                                <span id="massiveAggressionDisplay" class="range-value">10</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-secondary btn-lg" onclick="generateMassiveLineups()">
+                        <i class="fas fa-magic mr-2"></i> Generar alineaciones
+                    </button>
+
+                    <div id="massiveResultsSection" class="hidden mt-6">
+                        <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+                            <label class="input-label mb-0">Alineaciones generadas</label>
+                            <button class="btn btn-elegant btn-sm" onclick="downloadAllMassive()">
+                                <i class="fas fa-file-archive"></i> Descargar todas
+                            </button>
+                        </div>
+                        <div id="massiveResults" class="massive-results-grid"></div>
                     </div>
                 </div>
             </div>
@@ -1321,6 +1509,16 @@
                                         </svg>
                                     </span>
                                     Ver plantilla
+                                </a>
+                                <a href="#" id="massiveModeLink" class="text-sm text-blue-600 hover:underline inline-flex items-center w-full justify-end">
+                                    <span class="view-squad-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M11.644 1.59a.75.75 0 01.712 0l9.75 5.25a.75.75 0 010 1.32l-9.75 5.25a.75.75 0 01-.712 0l-9.75-5.25a.75.75 0 010-1.32l9.75-5.25z" />
+                                            <path d="M3.265 10.602l7.668 4.129a2.25 2.25 0 002.134 0l7.668-4.13 1.37.739a.75.75 0 010 1.32l-9.75 5.25a.75.75 0 01-.71 0l-9.75-5.25a.75.75 0 010-1.32l1.37-.738z" />
+                                            <path d="M10.933 19.231l-7.668-4.13-1.37.739a.75.75 0 000 1.32l9.75 5.25c.221.12.489.12.71 0l9.75-5.25a.75.75 0 000-1.32l-1.37-.738-7.668 4.13a2.25 2.25 0 01-2.134-.001z" />
+                                        </svg>
+                                    </span>
+                                    Usar modo masivo
                                 </a>
                             </div>
                         </div>
@@ -1605,6 +1803,7 @@
         </div>
     </main>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
         if (window.self !== window.top) {
             document.getElementById('fullscreen-btn').classList.remove('hidden');
@@ -1691,6 +1890,390 @@
                 modal.style.display = 'none';
             }
         });
+
+        /* ===================== MODO MASIVO ===================== */
+
+        document.getElementById('massiveModeLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('massiveModal').style.display = 'flex';
+        });
+
+        document.getElementById('closeMassiveModal').addEventListener('click', function() {
+            document.getElementById('massiveModal').style.display = 'none';
+        });
+
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('massiveModal');
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        let massiveFiles = [];
+        let massiveResults = [];
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, function(c) {
+                return ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                })[c];
+            });
+        }
+
+        const massiveDropzone = document.getElementById('massiveDropzone');
+        const massiveFileInput = document.getElementById('massiveFileInput');
+
+        massiveDropzone.addEventListener('click', function() {
+            massiveFileInput.click();
+        });
+
+        massiveFileInput.addEventListener('change', function() {
+            handleMassiveFiles(this.files);
+            this.value = '';
+        });
+
+        massiveDropzone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            massiveDropzone.classList.add('dragover');
+        });
+
+        massiveDropzone.addEventListener('dragleave', function() {
+            massiveDropzone.classList.remove('dragover');
+        });
+
+        massiveDropzone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            massiveDropzone.classList.remove('dragover');
+            if (e.dataTransfer && e.dataTransfer.files) {
+                handleMassiveFiles(e.dataTransfer.files);
+            }
+        });
+
+        function handleMassiveFiles(fileList) {
+            const files = Array.from(fileList).filter(f => /\.txt$/i.test(f.name));
+            if (!files.length) {
+                showToast('Solo se permiten archivos .txt', 'error');
+                return;
+            }
+
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    massiveFiles.push({
+                        name: file.name,
+                        abbr: file.name.replace(/\.txt$/i, '').trim().toUpperCase(),
+                        content: e.target.result
+                    });
+                    renderMassiveFileList();
+                };
+                reader.readAsText(file);
+            });
+
+            showToast(files.length + ' archivo(s) cargado(s)', 'success');
+        }
+
+        function renderMassiveFileList() {
+            const list = document.getElementById('massiveFileList');
+            const actions = document.getElementById('massiveFileActions');
+
+            if (!massiveFiles.length) {
+                list.innerHTML = '';
+                actions.classList.add('hidden');
+                return;
+            }
+
+            actions.classList.remove('hidden');
+
+            list.innerHTML = massiveFiles.map(function(f, i) {
+                return '<div class="massive-file-item">' +
+                    '<span><i class="fas fa-file-alt mr-2"></i>' + escapeHtml(f.name) +
+                    ' <span class="text-gray-500">(' + escapeHtml(f.abbr) + ')</span></span>' +
+                    '<button type="button" onclick="removeMassiveFile(' + i + ')"><i class="fas fa-times"></i></button>' +
+                    '</div>';
+            }).join('');
+        }
+
+        function removeMassiveFile(index) {
+            massiveFiles.splice(index, 1);
+            renderMassiveFileList();
+        }
+
+        function clearMassiveFiles() {
+            massiveFiles = [];
+            massiveResults = [];
+            renderMassiveFileList();
+            renderMassiveResults();
+            showToast('Plantillas eliminadas', 'success');
+        }
+
+        document.getElementById('massiveAggression').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('massiveAggressionSlider').classList.remove('hidden');
+            } else {
+                document.getElementById('massiveAggressionSlider').classList.add('hidden');
+            }
+        });
+
+        document.getElementById('massiveAggressionValue').addEventListener('input', function() {
+            document.getElementById('massiveAggressionDisplay').innerText = this.value;
+        });
+
+        document.getElementById('massivePrioritizeSubs').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('massiveMixStartersSubs').checked = false;
+            }
+        });
+
+        document.getElementById('massiveMixStartersSubs').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('massivePrioritizeSubs').checked = false;
+            }
+        });
+
+        function buildMassiveLineupText(squadText, abbreviation, opts) {
+            const players = parseSquad(squadText, 'available');
+
+            if (players.length < 16) {
+                throw new Error('No hay suficientes jugadores disponibles (mínimo 16).');
+            }
+
+            const randomTactics = ['A', 'C', 'D', 'E', 'L', 'N', 'P'];
+            const randomFormations = ['4-4-2', '4-3-3', '4-5-1', '5-3-2', '3-4-3', '3-5-2'];
+
+            const tactic = (opts.tactic && opts.tactic !== 'Aleatoria') ?
+                opts.tactic :
+                randomTactics[Math.floor(Math.random() * randomTactics.length)];
+
+            const formation = (opts.formation && opts.formation !== 'Aleatoria') ?
+                opts.formation :
+                randomFormations[Math.floor(Math.random() * randomFormations.length)];
+
+            const variation = Math.floor(Math.random() * 3) + 1;
+
+            const lineup = createLineup(players, opts.fitPriority, variation, formation, opts.prioritizeSubs,
+                opts.mixStartersSubs, tactic);
+
+            let text = formatLineup(abbreviation, lineup, tactic, opts.aggression ? opts.aggressionValue : null,
+                formation);
+
+            if (opts.substitutions) {
+                const dfPlayer = Math.random() < 0.5 ? 2 : 3;
+                const mfPlayer = Math.random() < 0.5 ? 7 : 8;
+                const fwPlayer = Math.random() < 0.5 ? 11 : 10;
+
+                const substitutionsList = [
+                    { text: `SUB ${dfPlayer} 13 DF IF MIN = ${Math.floor(Math.random() * (90 - 45 + 1)) + 45}`, min: 0 },
+                    { text: `SUB ${mfPlayer} 15 MF IF MIN = ${Math.floor(Math.random() * (90 - 45 + 1)) + 45}`, min: 0 },
+                    { text: `SUB ${fwPlayer} 16 FW IF MIN = ${Math.floor(Math.random() * (90 - 45 + 1)) + 45}`, min: 0 }
+                ];
+
+                substitutionsList.forEach(sub => {
+                    const minMatch = sub.text.match(/MIN = (\d+)/);
+                    if (minMatch) sub.min = parseInt(minMatch[1]);
+                });
+                substitutionsList.sort((a, b) => a.min - b.min);
+
+                text += '\n\n' + substitutionsList.map(sub => sub.text).join('\n');
+            }
+
+            if (opts.conditionals) {
+                const category1 = [
+                    'TACTIC L IF SCORE = 3',
+                    'TACTIC P IF SCORE = 2',
+                    'TACTIC D IF SCORE = -3',
+                    'TACTIC A IF MIN >= 65 SCORE <= -1',
+                    'TACTIC C IF MIN >= 50 SCORE >= 1',
+                    'TACTIC D IF MIN >= 70 SCORE >= 2'
+                ];
+                const category2 = [
+                    'CHANGEPOS 9 AM IF MIN = 65 SCORE <= -1',
+                    'CHANGEPOS 7 DM IF MIN >= 65 SCORE <= 1',
+                    'CHANGEAGG 18 IF SCORE <= -2',
+                    'CHANGEAGG 10 IF SCORE <= 2'
+                ];
+
+                const shuffledCat1 = category1
+                    .filter(cond => !cond.includes(`TACTIC ${tactic}`))
+                    .sort(() => 0.5 - Math.random());
+                const selectedCat1 = shuffledCat1.slice(0, 2);
+
+                const numCat2 = Math.floor(Math.random() * 3);
+                const shuffledCat2 = category2.sort(() => 0.5 - Math.random());
+                const selectedCat2 = shuffledCat2.slice(0, numCat2);
+
+                const finalConditionals = [...selectedCat1, ...selectedCat2].join('\n');
+
+                if (finalConditionals.trim()) {
+                    text += '\n\n' + finalConditionals.trim();
+                }
+            }
+
+            return text;
+        }
+
+        function generateMassiveLineups() {
+            if (!massiveFiles.length) {
+                showToast('Carga al menos una plantilla.', 'error');
+                return;
+            }
+
+            const opts = {
+                fitPriority: document.getElementById('massiveFitPriority').checked,
+                substitutions: document.getElementById('massiveSubstitutions').checked,
+                prioritizeSubs: document.getElementById('massivePrioritizeSubs').checked,
+                mixStartersSubs: document.getElementById('massiveMixStartersSubs').checked,
+                conditionals: document.getElementById('massiveConditionals').checked,
+                aggression: document.getElementById('massiveAggression').checked,
+                aggressionValue: document.getElementById('massiveAggressionValue').value,
+                formation: document.getElementById('massiveFormation').value,
+                tactic: document.getElementById('massiveTactic').value
+            };
+
+            const results = [];
+            const errors = [];
+
+            massiveFiles.forEach(function(f) {
+                try {
+                    const text = buildMassiveLineupText(f.content, f.abbr, opts);
+                    results.push({ abbr: f.abbr, name: f.name, text: text });
+                } catch (err) {
+                    errors.push(f.name + ': ' + err.message);
+                }
+            });
+
+            massiveResults = results;
+            renderMassiveResults();
+
+            const sound = document.getElementById('confirmation-sound');
+            if (sound) {
+                sound.play().catch(function() {});
+            }
+
+            if (errors.length) {
+                showToast('Algunas plantillas no se pudieron procesar.', 'error');
+                setTimeout(function() {
+                    alert('Errores encontrados:\n\n' + errors.join('\n'));
+                }, 400);
+            } else if (results.length) {
+                showToast('Alineaciones generadas correctamente', 'success');
+                document.getElementById('massiveResultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function renderMassiveResults() {
+            const section = document.getElementById('massiveResultsSection');
+            const container = document.getElementById('massiveResults');
+
+            if (!massiveResults.length) {
+                section.classList.add('hidden');
+                container.innerHTML = '';
+                return;
+            }
+
+            section.classList.remove('hidden');
+
+            container.innerHTML = massiveResults.map(function(r, i) {
+                return '<div class="lineup-card">' +
+                    '<div class="lineup-title">' +
+                        '<span>' + escapeHtml(r.abbr) + '</span>' +
+                        '<div class="flex gap-1">' +
+                            '<div class="tooltip">' +
+                                '<button onclick="copyMassiveLineup(' + i + ', this)" class="btn-icon">' +
+                                    '<img alt="Copiar" src="https://2img.net/i.imgur.com/dFM5cLr.png" />' +
+                                '</button>' +
+                                '<span class="tooltiptext">Copiar al portapapeles</span>' +
+                            '</div>' +
+                            '<div class="tooltip">' +
+                                '<button onclick="downloadMassiveLineup(' + i + ', this)" class="btn-icon">' +
+                                    '<img alt="Descargar" src="https://2img.net/i.imgur.com/PsdweS7.png" />' +
+                                '</button>' +
+                                '<span class="tooltiptext">Descargar alineación</span>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="lineup-content massive-lineup-content">' + escapeHtml(r.text) + '</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        async function copyMassiveLineup(index, button) {
+            const result = massiveResults[index];
+            if (!result) return;
+
+            try {
+                await navigator.clipboard.writeText(result.text);
+                button.classList.add('action-animation');
+                setTimeout(function() {
+                    button.classList.remove('action-animation');
+                }, 400);
+                showToast('Alineación copiada al portapapeles', 'success');
+            } catch (err) {
+                showToast('Error al copiar al portapapeles', 'error');
+            }
+        }
+
+        function downloadMassiveLineup(index, button) {
+            const result = massiveResults[index];
+            if (!result) return;
+
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(result.text));
+            element.setAttribute('download', result.abbr.toLowerCase() + 'sht.txt');
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+
+            button.classList.add('action-animation');
+            setTimeout(function() {
+                button.classList.remove('action-animation');
+            }, 400);
+            showToast('Alineación descargada', 'success');
+        }
+
+        async function downloadAllMassive() {
+            if (!massiveResults.length) {
+                showToast('No hay alineaciones para descargar.', 'error');
+                return;
+            }
+
+            if (typeof JSZip === 'undefined') {
+                showToast('No se pudo cargar el generador de ZIP.', 'error');
+                return;
+            }
+
+            try {
+                const zip = new JSZip();
+                massiveResults.forEach(function(r) {
+                    zip.file(r.abbr.toLowerCase() + 'sht.txt', r.text);
+                });
+
+                const blob = await zip.generateAsync({ type: 'blob' });
+                const url = URL.createObjectURL(blob);
+
+                const element = document.createElement('a');
+                element.setAttribute('href', url);
+                element.setAttribute('download', 'alineaciones.zip');
+                element.style.display = 'none';
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+
+                setTimeout(function() {
+                    URL.revokeObjectURL(url);
+                }, 1000);
+
+                showToast('Todas las alineaciones descargadas', 'success');
+            } catch (err) {
+                showToast('Error al generar el archivo ZIP', 'error');
+            }
+        }
+
+        /* =================== FIN MODO MASIVO =================== */
 
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
